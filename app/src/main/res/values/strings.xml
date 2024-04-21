@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">DiplomaST</string>
+    <string name="welcome_text"><b>Здравствуйте! Вы...</b></string>
+    <string name="welcome_text2"><b>Здравствуйте!</b></string>
+    <string name="login_hint">Введите логин...</string>
+    <string name="password_hint">Введите пароль...</string>
+    <string name="password_hint2">Повторите пароль...</string>
+    <string name="edit_text"><b>Давайте познакомимся поближе!</b></string>
+</resources>

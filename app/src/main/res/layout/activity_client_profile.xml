@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ClientProfileActivity"
+    android:orientation="vertical" android:scrollbars="none">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="150dp"
+            android:layout_marginTop="20dp"
+            android:src="@drawable/client_pic"/>
+        <TextView android:id="@+id/login_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:textAlignment="center" android:textSize="20dp"
+            android:text="client_login" android:textColor="@color/purple" android:textStyle="bold"/>
+        <TextView android:id="@+id/info_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center" android:textSize="20dp"
+            android:text="Username, age" android:textColor="@color/purple" android:textStyle="bold"/>
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:scrollbars="none">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <ImageView
+                    android:id="@+id/first_btn"
+                    android:layout_width="233dp"
+                    android:layout_height="298dp"
+                    android:layout_marginLeft="20dp"
+                    android:onClick="PanelOnClick"
+                    android:src="@drawable/panel_1" />
+                <ImageView android:id="@+id/second_btn" android:onClick="PanelOnClick"
+                    android:layout_width="233dp"
+                    android:layout_height="298dp"
+                    android:layout_marginLeft="20dp"
+                    android:src="@drawable/panel_2"/>
+                <ImageView android:id="@+id/third_btn" android:onClick="PanelOnClick"
+                    android:layout_width="233dp"
+                    android:layout_height="298dp"
+                    android:layout_marginLeft="20dp"
+                    android:src="@drawable/panel_3"/>
+                <ImageView android:id="@+id/fourth_btn" android:onClick="PanelOnClick"
+                    android:layout_width="233dp"
+                    android:layout_height="298dp"
+                    android:layout_marginLeft="20dp"
+                    android:src="@drawable/panel_4"/>
+                <ImageView android:id="@+id/fifth_btn" android:onClick="PanelOnClick"
+                    android:layout_width="233dp"
+                    android:layout_height="298dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:src="@drawable/end_panel"/>
+            </LinearLayout>
+        </HorizontalScrollView>
+        <Button android:id="@+id/exit_btn" android:onClick="ExitOnClick"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_gravity="center"
+            android:backgroundTint="@color/purple"
+            android:text="Выйти" android:textSize="17dp" android:fontFamily="casual"/>
+    </LinearLayout>
+</ScrollView>

@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SpecialistProfileActivity"
+    android:orientation="vertical" android:scrollbars="none">
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:orientation="vertical">
+    <ImageView
+    android:layout_width="wrap_content"
+    android:layout_height="150dp"
+    android:layout_marginTop="20dp"
+    android:src="@drawable/specialist_pic"/>
+    <TextView android:id="@+id/login_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:textAlignment="center" android:textSize="20dp"
+        android:text="specialist_login" android:textColor="@color/purple" android:textStyle="bold"/>
+    <TextView android:id="@+id/info_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:textAlignment="center" android:textSize="20dp"
+        android:text="Username, age" android:textColor="@color/purple" android:textStyle="bold"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:background="@drawable/siren_border"
+        android:padding="15dp">
+      <TextView android:id="@+id/grad_view"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:textSize="18dp" android:textStyle="bold" android:textColor="@color/white"
+          android:text="Образование: "/>
+      <TextView android:id="@+id/grad2_view"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:textSize="18dp" android:textStyle="bold" android:textColor="@color/white"
+          android:text="Дополнительное образование: "/>
+      <TextView android:id="@+id/ispoint"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="20dp"
+          android:textSize="18dp" android:textStyle="bold" android:textColor="@color/white"
+          android:text="Специалист работает со следующими темами:"/>
+      <androidx.recyclerview.widget.RecyclerView android:id="@+id/point_view"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"/>
+    </LinearLayout>
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="10dp"
+        android:scrollbars="none">
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:orientation="horizontal">
+        <ImageView
+            android:id="@+id/first_btn"
+            android:layout_width="233dp"
+            android:layout_height="298dp"
+            android:layout_marginLeft="20dp"
+            android:onClick="PanelOnClick"
+            android:src="@drawable/panel_5"/>
+        <ImageView android:id="@+id/second_btn" android:onClick="PanelOnClick"
+            android:layout_width="233dp"
+            android:layout_height="298dp"
+            android:layout_marginLeft="20dp"
+            android:src="@drawable/panel_3"/>
+        <ImageView android:id="@+id/third_btn" android:onClick="PanelOnClick"
+            android:layout_width="233dp"
+            android:layout_height="298dp"
+            android:layout_marginLeft="20dp"
+            android:src="@drawable/panel_4"/>
+        <ImageView android:id="@+id/fourth_btn" android:onClick="PanelOnClick"
+            android:layout_width="233dp"
+            android:layout_height="298dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:src="@drawable/end_panel"/>
+      </LinearLayout>
+    </HorizontalScrollView>
+    <Button android:id="@+id/exit_btn" android:onClick="ExitOnClick"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="15dp"
+        android:layout_gravity="center"
+        android:backgroundTint="@color/purple"
+        android:text="Выйти" android:textSize="17dp" android:fontFamily="casual"/>
+
+
+  </LinearLayout>
+  </ScrollView>

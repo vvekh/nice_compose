@@ -1,0 +1,7 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Базовая тема приложения. -->
+    <style name="Base.Theme.DiplomaST" parent="Theme.Material3.Light.NoActionBar">
+        <!-- Настройка вашей темной темы здесь. -->
+        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+    </style>
+</resources>
