@@ -14,6 +14,8 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.diplomast.DTO.Client;
+import com.example.diplomast.Retrofit.APIclient;
+import com.example.diplomast.Retrofit.APIinterface;
 
 import java.io.Serializable;
 import java.text.ParseException;
@@ -106,7 +108,7 @@ public class ClientProfileActivity extends AppCompatActivity {
     }
 
     public void ExitOnClick(View view) {
-        Intent intent = new Intent(getApplicationContext(), StartActivity.class);
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
         startActivity(intent);
     }
 }

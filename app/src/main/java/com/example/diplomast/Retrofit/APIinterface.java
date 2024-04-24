@@ -1,4 +1,4 @@
-package com.example.diplomast;
+package com.example.diplomast.Retrofit;
 
 import com.example.diplomast.DTO.Client;
 import com.example.diplomast.DTO.Note;

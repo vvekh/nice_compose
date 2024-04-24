@@ -3,7 +3,6 @@ package com.example.diplomast;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Layout;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -22,9 +21,10 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.diplomast.DTO.Client;
 import com.example.diplomast.DTO.Timeline;
+import com.example.diplomast.Retrofit.APIclient;
+import com.example.diplomast.Retrofit.APIinterface;
 
 import java.io.Serializable;
-import java.sql.Time;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -76,6 +76,7 @@ public class ClientEditActivity extends AppCompatActivity {
                 public void onResponse(Call<List<Timeline>> call, Response<List<Timeline>> response) {
                     List<Timeline> timelines = response.body();
                     List<String> timelineNames = new ArrayList<>();
+                    timelineNames.add("Выбрите часовой пояс");
                     for (Timeline timeline : timelines) {
                         String timelineName = timeline.timelinename;
                         timelineNames.add(timelineName);
@@ -83,7 +84,7 @@ public class ClientEditActivity extends AppCompatActivity {
                     ArrayAdapter<String> adapter = new ArrayAdapter<>(ClientEditActivity.this, android.R.layout.simple_spinner_item, timelineNames);
                     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     TimelineBox.setAdapter(adapter);
-                    TimelineBox.setSelection(client.timelineid - 1);
+                    TimelineBox.setSelection(client.timelineid);
                 }
                 @Override
                 public void onFailure(Call<List<Timeline>> call, Throwable t) {

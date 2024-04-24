@@ -1,4 +1,4 @@
-package com.example.diplomast;
+package com.example.diplomast.Retrofit;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;

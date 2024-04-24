@@ -18,6 +18,8 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.diplomast.DTO.Client;
 import com.example.diplomast.DTO.Specialist;
+import com.example.diplomast.Retrofit.APIclient;
+import com.example.diplomast.Retrofit.APIinterface;
 
 import java.io.Serializable;
 
@@ -101,6 +103,7 @@ public class StartActivity extends AppCompatActivity {
             Specialist newspecialist = new Specialist();
             newspecialist.login = login;
             newspecialist.password = password;
+            newspecialist.status = "3";
             Intent intent = new Intent(getApplicationContext(), SpecialistEditActivity.class);
             intent.putExtra("ActiveSpecialist", (Serializable) newspecialist);
             startActivity(intent);

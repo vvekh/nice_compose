@@ -20,9 +20,10 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.example.diplomast.DTO.Client;
 import com.example.diplomast.DTO.Specialist;
 import com.example.diplomast.DTO.Timeline;
+import com.example.diplomast.Retrofit.APIclient;
+import com.example.diplomast.Retrofit.APIinterface;
 
 import java.io.Serializable;
 import java.text.ParseException;
@@ -162,10 +163,10 @@ public class SpecialistEditActivity extends AppCompatActivity {
         }
     }
 
-    public void SavedocOnClick(View view) {
+    public void SavedocOnClick(View view) { //Сохранение документа
     }
 
-    public void Savedoc2OnClick(View view) {
+    public void Savedoc2OnClick(View view) { //Сохранение документа
     }
 
     public void SaveOnClick(View view) {
@@ -184,7 +185,7 @@ public class SpecialistEditActivity extends AppCompatActivity {
         } else {
             Saving();
         }
-    }
+    } //Кнопка сохранения пользователя в соответствии с условиями
 
     private void Saving(){
         if (specialist.status.equals("1")){ //существующий аккаунт
@@ -252,5 +253,5 @@ public class SpecialistEditActivity extends AppCompatActivity {
                 }
             });
         }
-    }
+    } //Функция сохранения пользователя
 }
