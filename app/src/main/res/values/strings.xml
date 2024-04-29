@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">DiplomaST</string>
+    <string name="app_name">nice</string>
     <string name="welcome_text"><b>Здравствуйте! Вы...</b></string>
     <string name="welcome_text2"><b>Здравствуйте!</b></string>
     <string name="login_hint">Введите логин...</string>

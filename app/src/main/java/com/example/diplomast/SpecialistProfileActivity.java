@@ -2,6 +2,7 @@ package com.example.diplomast;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -156,7 +157,13 @@ public class SpecialistProfileActivity extends AppCompatActivity {
     }
 
     public void ExitOnClick(View view) {
+        SharedPreferences prefs = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.clear(); // Очистка всех значений
+        editor.apply();
+
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK); // Закрыть все предыдущие активити
         startActivity(intent);
     }
 }

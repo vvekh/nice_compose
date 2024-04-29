@@ -8,7 +8,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class APIclient {
     private static Retrofit retrofit = null;
-    private static final String url = "http://37.128.207.61:5216/api/";
+    private static final String url = "http://37.128.207.61:5000/api/";
     public  static Retrofit start() {
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor()
                 .setLevel(HttpLoggingInterceptor.Level.BODY);

@@ -2,6 +2,7 @@ package com.example.diplomast;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -28,7 +29,9 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class StartActivity extends AppCompatActivity {
-    APIinterface api; Boolean i = true; String separatorr;
+    APIinterface api;
+    Boolean i = true;
+    String separatorr;
     EditText LoginBox, PasswordBox, PasswordBox2;
     Button TopBtn, BottomBtn;
     LinearLayout RegLayout2;
@@ -44,7 +47,7 @@ public class StartActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        separatorr = getIntent().getStringExtra("KEY");
+        separatorr = getIntent().getStringExtra("KEY"); // Получаем сепаратор из предыдущего окна
         api = APIclient.start().create(APIinterface.class);
         LoginBox = findViewById(R.id.login_box);
         PasswordBox = findViewById(R.id.password_box);
@@ -52,6 +55,8 @@ public class StartActivity extends AppCompatActivity {
         TopBtn = findViewById(R.id.top_btn);
         BottomBtn = findViewById(R.id.bottom_btn);
         RegLayout2 = findViewById(R.id.reg_layout2);
+
+        loadSavedCredentials();
     }
 
     public void TopOnClick(View view) {
@@ -61,18 +66,15 @@ public class StartActivity extends AppCompatActivity {
 
         if (i == true){
             if (log.length() < 4){
-                //Слишком короткий логин
                 Toast.makeText(getApplicationContext(), "Слишком короткий логин!", Toast.LENGTH_SHORT).show();
             } else if (pas.length() < 8){
-                //Слишком короткий пароль
                 Toast.makeText(getApplicationContext(), "Слишком короткий пароль!", Toast.LENGTH_SHORT).show();
             } else if (!pas.equals(pas2)){
-                //Пароли не совпадают
                 Toast.makeText(getApplicationContext(), "Пароли не совпадают!", Toast.LENGTH_SHORT).show();
             } else {
                 Registration(log, pas);
             }
-        }else if (i == false){
+        } else if (i == false){
             Authorization(log, pas);
         }
     }
@@ -108,6 +110,7 @@ public class StartActivity extends AppCompatActivity {
             intent.putExtra("ActiveSpecialist", (Serializable) newspecialist);
             startActivity(intent);
         }
+        saveCredentials(login, password);
     }
 
     private void Authorization(String login, String password){
@@ -152,5 +155,25 @@ public class StartActivity extends AppCompatActivity {
                 }
             });
         }
+        saveCredentials(login, password);
+    }
+
+    private void saveCredentials(String login, String password) {
+        SharedPreferences prefs = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString("login", login);
+        editor.putString("password", password);
+        editor.apply();
+    }
+    private void loadSavedCredentials() {
+        SharedPreferences prefs = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+        String savedLogin = prefs.getString("login", "");
+        String savedPassword = prefs.getString("password", "");
+        LoginBox.setText(savedLogin);
+        PasswordBox.setText(savedPassword);
+        RegLayout2.setVisibility(View.GONE);
+        TopBtn.setText("Войти");
+        BottomBtn.setText("Зарегистрироваться");
+        i = false;
     }
 }
