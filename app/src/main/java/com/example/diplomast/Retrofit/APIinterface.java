@@ -8,13 +8,16 @@ import com.example.diplomast.DTO.Timeline;
 
 import java.util.List;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public interface APIinterface {
     @Headers("Accept: application/json")
@@ -38,8 +41,30 @@ public interface APIinterface {
     @Headers("Accept: application/json")
     @PUT("Specialist/{id}/Update")
     Call<Void> updateSpecialist(@Path("id") int id, @Body Specialist updatedSpecialist);
-
     @Headers("Accept: application/json")
     @POST("Specialist/Registration")
     Call<Void> postNewSpecialist(@Body Specialist newSpecialist);
+    @Headers("Accept: application/json")
+    @GET("Points")
+    Call<List<PointDTO>> getAllPoints();
+
+    @Headers("Accept: application/json")
+    @GET("Specialists/ByPoints")
+    Call<List<Specialist>> getSpecialistsByCriteria(@Query("criteriaIds") List<Integer> criteriaIds);
+
+    @Headers("Accept: application/json")
+    @GET("Client/{id}/Favorites")
+    Call<List<Specialist>> getFavoriteSpecialists(@Path("id") int id);
+
+    @Headers("Accept: application/json")
+    @GET("Specialists/1")
+    Call<List<Specialist>> getAllSpecialists();
+
+    @Headers("Accept: application/json")
+    @POST("Client/{id}/Favorites/Add/{specialistId}")
+    Call<ResponseBody> addFavoriteSpecialist(@Path("id") int id, @Path("specialistId") int specialistId);
+
+    @Headers("Accept: application/json")
+    @DELETE("Client/{id}/Favorites/Remove/{specialistId}")
+    Call<ResponseBody> removeFavoriteSpecialist(@Path("id") int id, @Path("specialistId") int specialistId);
 }

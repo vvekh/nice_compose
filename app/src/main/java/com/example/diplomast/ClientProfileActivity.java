@@ -93,15 +93,18 @@ public class ClientProfileActivity extends AppCompatActivity {
         String ButtonName = getResources().getResourceEntryName(view.getId());
         switch (ButtonName){
             case "first_btn":
+                Intent intent1 = new Intent(getApplicationContext(), ClientPointsActivity.class);
+                intent1.putExtra("ActiveClient", (Serializable) client);
+                startActivity(intent1);
                 break;
             case "second_btn":
                 break;
             case "third_btn":
                 break;
             case "fourth_btn":
-                Intent intent = new Intent(getApplicationContext(), ClientEditActivity.class);
-                intent.putExtra("ActiveClient", (Serializable) client);
-                startActivity(intent);
+                Intent intent4 = new Intent(getApplicationContext(), ClientEditActivity.class);
+                intent4.putExtra("ActiveClient", (Serializable) client);
+                startActivity(intent4);
                 break;
             case "fifth_btn":
                 break;

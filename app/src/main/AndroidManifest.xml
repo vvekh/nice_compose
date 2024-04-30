@@ -16,6 +16,15 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".FavouritesActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SpecialistListActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ClientPointsActivity"
+            android:exported="false" />
+        <activity
             android:name=".BlankStatus3Activity"
             android:exported="false" />
         <activity

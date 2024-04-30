@@ -12,7 +12,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
-            android:background="@drawable/purple_border"
+            android:background="@drawable/siren_border"
             android:paddingHorizontal="20dp"
             android:paddingVertical="10dp">
             <TextView

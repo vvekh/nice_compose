@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ClientEditActivity"
+    android:orientation="vertical" android:scrollbars="none">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="150dp"
+            android:layout_marginTop="20dp"
+            android:src="@drawable/client_pic"/>
+        <TextView android:id="@+id/login_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:textAlignment="center" android:textSize="20dp"
+            android:textColor="@color/purple" android:textStyle="bold"/>
+        <TextView android:id="@+id/info_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center" android:textSize="20dp"
+            android:textColor="@color/purple" android:textStyle="bold"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:orientation="vertical"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:background="@drawable/siren_border"
+            android:padding="20dp">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="@string/edit_text"
+                android:fontFamily="casual" android:textSize="25dp" android:textColor="@color/white"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="10dp"
+                android:padding="15dp" android:background="@drawable/white_border">
+                <EditText android:id="@+id/name_box"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/gray"
+                    android:hint="Ваше имя..." android:textSize="16dp"/>
+                <EditText android:id="@+id/login_box"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/gray"
+                    android:hint="Ваш логин..." android:textSize="16dp"/>
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <LinearLayout android:id="@+id/calendar_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" android:orientation="vertical">
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="5dp" android:textColor="@color/gray"
+                            android:text="Ваша дата рождения..." android:textSize="16dp"/>
+                        <DatePicker android:id="@+id/birthdate_box"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:calendarViewShown="false"
+                            android:datePickerMode="spinner"/>
+                    </LinearLayout>
+                </androidx.constraintlayout.widget.ConstraintLayout>
+                <Spinner android:id="@+id/timeline_box"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:backgroundTint="@color/gray"
+                    android:textSize="16dp"/>
+            </LinearLayout>
+        </LinearLayout>
+        <Button android:id="@+id/save_btn" android:onClick="SaveOnClick"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_gravity="center"
+            android:backgroundTint="@color/purple"
+            android:text="Сохранить" android:fontFamily="casual" android:textSize="17dp"/>
+    </LinearLayout>
+</ScrollView>

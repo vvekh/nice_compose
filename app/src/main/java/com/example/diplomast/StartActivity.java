@@ -158,6 +158,23 @@ public class StartActivity extends AppCompatActivity {
         saveCredentials(login, password);
     }
 
+    private void SpecNavigation(Specialist specialist){
+        if (specialist.id == 0){
+            //Intent intent = new Intent(getApplicationContext(), ЗАЯВКА_ОТКЛОНЕНА.class);
+            //startActivity(intent);
+        } else if (specialist.id == 3) {
+            //Intent intent = new Intent(getApplicationContext(), ЗАЯВКА_НА_РАССМОТРЕНИИ.class);
+            //startActivity(intent);
+        } else if (specialist.id == 4) {
+            //Intent intent = new Intent(getApplicationContext(), ПРОФИЛЬ_ЗАБЛОКИРОВАН.class);
+            //startActivity(intent);
+        }else {
+            Intent intent = new Intent(getApplicationContext(), SpecialistProfileActivity.class);
+            intent.putExtra("ActiveSpecialist", (Serializable) specialist);
+            startActivity(intent);
+        }
+    }
+
     private void saveCredentials(String login, String password) {
         SharedPreferences prefs = getSharedPreferences("MyPrefs", MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
