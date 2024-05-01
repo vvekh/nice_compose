@@ -47,24 +47,25 @@ public interface APIinterface {
     @Headers("Accept: application/json")
     @GET("Points")
     Call<List<PointDTO>> getAllPoints();
-
     @Headers("Accept: application/json")
     @GET("Specialists/ByPoints")
     Call<List<Specialist>> getSpecialistsByCriteria(@Query("criteriaIds") List<Integer> criteriaIds);
-
     @Headers("Accept: application/json")
     @GET("Client/{id}/Favorites")
     Call<List<Specialist>> getFavoriteSpecialists(@Path("id") int id);
-
     @Headers("Accept: application/json")
     @GET("Specialists/1")
     Call<List<Specialist>> getAllSpecialists();
-
     @Headers("Accept: application/json")
     @POST("Client/{id}/Favorites/Add/{specialistId}")
     Call<ResponseBody> addFavoriteSpecialist(@Path("id") int id, @Path("specialistId") int specialistId);
-
     @Headers("Accept: application/json")
     @DELETE("Client/{id}/Favorites/Remove/{specialistId}")
     Call<ResponseBody> removeFavoriteSpecialist(@Path("id") int id, @Path("specialistId") int specialistId);
+    @Headers("Accept: application/json")
+    @GET("Notes")
+    Call<List<Note>> getNotes();
+    @Headers("Accept: application/json")
+    @POST("Note/Insert")
+    Call<String> insertNote(@Body Note note);
 }

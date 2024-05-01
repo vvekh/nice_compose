@@ -100,6 +100,7 @@ public class StartActivity extends AppCompatActivity {
             newclient.password = password;
             Intent intent = new Intent(getApplicationContext(), ClientEditActivity.class);
             intent.putExtra("ActiveClient", (Serializable) newclient);
+            intent.putExtra("KEY", separatorr);
             startActivity(intent);
         } else if ("Специалист".equals(separatorr)){
             Specialist newspecialist = new Specialist();
@@ -108,6 +109,7 @@ public class StartActivity extends AppCompatActivity {
             newspecialist.status = "3";
             Intent intent = new Intent(getApplicationContext(), SpecialistEditActivity.class);
             intent.putExtra("ActiveSpecialist", (Serializable) newspecialist);
+            intent.putExtra("KEY", separatorr);
             startActivity(intent);
         }
         saveCredentials(login, password);
@@ -123,6 +125,7 @@ public class StartActivity extends AppCompatActivity {
                         Client tempclient = response.body();
                         Intent intent = new Intent(getApplicationContext(), ClientProfileActivity.class);
                         intent.putExtra("ActiveClient", (Serializable) tempclient);
+                        intent.putExtra("KEY", separatorr);
                         startActivity(intent);
                     } else {
                         Toast.makeText(getApplicationContext(), "Неверный логин или пароль", Toast.LENGTH_SHORT).show();
@@ -143,6 +146,7 @@ public class StartActivity extends AppCompatActivity {
                         Specialist specialist = response.body();
                         Intent intent = new Intent(getApplicationContext(), SpecialistProfileActivity.class);
                         intent.putExtra("ActiveSpecialist", (Serializable) specialist);
+                        intent.putExtra("KEY", separatorr);
                         startActivity(intent);
                     }else {
                         Toast.makeText(getApplicationContext(), "Неверный логин или пароль", Toast.LENGTH_SHORT).show();
@@ -171,6 +175,7 @@ public class StartActivity extends AppCompatActivity {
         }else {
             Intent intent = new Intent(getApplicationContext(), SpecialistProfileActivity.class);
             intent.putExtra("ActiveSpecialist", (Serializable) specialist);
+            intent.putExtra("KEY", separatorr);
             startActivity(intent);
         }
     }

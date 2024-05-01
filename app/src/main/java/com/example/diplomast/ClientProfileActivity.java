@@ -25,7 +25,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class ClientProfileActivity extends AppCompatActivity {
-    APIinterface api; Client client;
+    APIinterface api; Client client; String separatorr;
     TextView LoginView, InfoView;
     ImageView FirstBtn, SecondBtn, ThirdBtn, FourthBtn, FifthBtn;
     Button ExitBtn;
@@ -40,6 +40,7 @@ public class ClientProfileActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        separatorr = getIntent().getStringExtra("KEY");
         client = (Client) getIntent().getSerializableExtra("ActiveClient");
         api = APIclient.start().create(APIinterface.class);
         LoginView = findViewById(R.id.login_view);
@@ -95,15 +96,21 @@ public class ClientProfileActivity extends AppCompatActivity {
             case "first_btn":
                 Intent intent1 = new Intent(getApplicationContext(), ClientPointsActivity.class);
                 intent1.putExtra("ActiveClient", (Serializable) client);
+                intent1.putExtra("KEY", separatorr);
                 startActivity(intent1);
                 break;
             case "second_btn":
                 break;
             case "third_btn":
+                Intent intent3 = new Intent(getApplicationContext(), NotesListActivity.class);
+                intent3.putExtra("ActiveClient", (Serializable) client);
+                intent3.putExtra("KEY", separatorr);
+                startActivity(intent3);
                 break;
             case "fourth_btn":
                 Intent intent4 = new Intent(getApplicationContext(), ClientEditActivity.class);
                 intent4.putExtra("ActiveClient", (Serializable) client);
+                intent4.putExtra("KEY", separatorr);
                 startActivity(intent4);
                 break;
             case "fifth_btn":

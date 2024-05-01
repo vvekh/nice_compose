@@ -36,7 +36,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class SpecialistProfileActivity extends AppCompatActivity {
-    APIinterface api; Specialist specialist;
+    APIinterface api; Specialist specialist; String separatorr;
     ImageView FirstBtn, SecondBtn, ThirdBtn, FourthBtn;
     TextView LoginView, InfoView, GradView, GradView2, Ispoint;
     RecyclerView PointView;
@@ -53,6 +53,7 @@ public class SpecialistProfileActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        separatorr = getIntent().getStringExtra("KEY");
         specialist = (Specialist) getIntent().getSerializableExtra("ActiveSpecialist");
         api = APIclient.start().create(APIinterface.class);
         Ispoint = findViewById(R.id.ispoint);
@@ -143,15 +144,28 @@ public class SpecialistProfileActivity extends AppCompatActivity {
         String ButtonName = getResources().getResourceEntryName(view.getId());
         switch (ButtonName){
             case "first_btn":
+                Intent intent1 = new Intent(getApplicationContext(), SpecialistEditActivity.class);
+                intent1.putExtra("ActiveSpecialist", (Serializable) specialist);
+                intent1.putExtra("KEY", separatorr);
+                startActivity(intent1);
                 break;
             case "second_btn":
+                Intent intent2 = new Intent(getApplicationContext(), NotesListActivity.class);
+                intent2.putExtra("ActiveSpecialist", (Serializable) specialist);
+                intent2.putExtra("KEY", separatorr);
+                startActivity(intent2);
                 break;
             case "third_btn":
-                Intent intent = new Intent(getApplicationContext(), SpecialistEditActivity.class);
-                intent.putExtra("ActiveSpecialist", (Serializable) specialist);
-                startActivity(intent);
+                Intent intent3 = new Intent(getApplicationContext(), SpecialistEditActivity.class);
+                intent3.putExtra("ActiveSpecialist", (Serializable) specialist);
+                intent3.putExtra("KEY", separatorr);
+                startActivity(intent3);
                 break;
             case "fourth_btn":
+                Intent intent4 = new Intent(getApplicationContext(), SpecialistEditActivity.class);
+                intent4.putExtra("ActiveSpecialist", (Serializable) specialist);
+                intent4.putExtra("KEY", separatorr);
+                startActivity(intent4);
                 break;
         }
     }
