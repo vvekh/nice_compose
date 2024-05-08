@@ -4,10 +4,12 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -21,6 +23,7 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import com.example.diplomast.Adapters.PointAdapter;
 import com.example.diplomast.DTO.PointDTO;
 import com.example.diplomast.DTO.Specialist;
+import com.example.diplomast.DTO.Timeline;
 import com.example.diplomast.Retrofit.APIclient;
 import com.example.diplomast.Retrofit.APIinterface;
 
@@ -36,9 +39,12 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class SpecialistProfileActivity extends AppCompatActivity {
+    private static final int REQUEST_CODE_FIRST_BTN = 1;
+    String Enable; List<Timeline> lines; List<PointDTO> points;
     APIinterface api; Specialist specialist; String separatorr;
+    LinearLayout PanelLayout, ShowLayout;
     ImageView FirstBtn, SecondBtn, ThirdBtn, FourthBtn;
-    TextView LoginView, InfoView, GradView, GradView2, Ispoint;
+    TextView LoginView, InfoView, GradView, GradView2, Ispoint, TimelineView, PriceView;
     RecyclerView PointView;
     Button ExitBtn;
 
@@ -53,10 +59,15 @@ public class SpecialistProfileActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        Enable = getIntent().getStringExtra("Enable");
         separatorr = getIntent().getStringExtra("KEY");
         specialist = (Specialist) getIntent().getSerializableExtra("ActiveSpecialist");
         api = APIclient.start().create(APIinterface.class);
         Ispoint = findViewById(R.id.ispoint);
+        PanelLayout = findViewById(R.id.panel_layout);
+        ShowLayout = findViewById(R.id.show_layout);
+        TimelineView = findViewById(R.id.timeline_view);
+        PriceView = findViewById(R.id.price_view);
         LoginView = findViewById(R.id.login_view);
         InfoView = findViewById(R.id.info_view);
         GradView = findViewById(R.id.grad_view);
@@ -77,7 +88,7 @@ public class SpecialistProfileActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(Call<List<PointDTO>> call, Response<List<PointDTO>> response) {
                     if (response.isSuccessful()) {
-                        List<PointDTO> points = response.body();
+                        points = response.body();
                         PointAdapter adapter = new PointAdapter(points); // listOfPoints - список объектов PointDTO
                         PointView.setLayoutManager(layoutManager);
                         PointView.setAdapter(adapter);
@@ -92,6 +103,21 @@ public class SpecialistProfileActivity extends AppCompatActivity {
                     Log.d("FAIL", t.getMessage());
                 }
             });
+
+            Call<List<Timeline>> call1 = api.getAllTimelines();
+            call1.enqueue(new Callback<List<Timeline>>() {
+                @Override
+                public void onResponse(Call<List<Timeline>> call, Response<List<Timeline>> response) {
+                    lines = response.body();
+                    Timeline line = lines.get(specialist.timelineid - 1);
+                    TimelineView.setText("Часовой пояс: " + line.timelinename);
+                }
+                @Override
+                public void onFailure(Call<List<Timeline>> call, Throwable t) {
+                    Log.d("FAIL", t.getMessage());
+                }
+            });
+
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             Date birthdate;
             try {
@@ -129,22 +155,34 @@ public class SpecialistProfileActivity extends AppCompatActivity {
                 }else if (specialist.graduationid == 2){
                     GradView.setText("Образование: два полных высших");
                 }
-                if (specialist.graduatuon2 == "0"){
-                    GradView2.setText("Дополнительное образование: нет");
-                }else if (specialist.graduatuon2 == "1"){
+                if (specialist.graduatuon2 == "1"){
                     GradView2.setText("Дополнительное образование: есть");
+                }else {
+                    GradView2.setText("Дополнительное образование: нет");
                 }
+
+                PriceView.setText("Стоимость сеанса: " + specialist.price + "руб.");
 
                 InfoView.setText(specialist.username + " " + specialist.usersurname + ", " + FinalAge + AgeSuffix);
             });
         }).start();
+        Load();
+    }
+
+    private void Load(){
+        if ("false".equals(Enable)){
+            PanelLayout.setVisibility(View.GONE);
+            ExitBtn.setVisibility(View.GONE);
+        }else {
+            ShowLayout.setVisibility(View.GONE);
+        }
     }
 
     public void PanelOnClick(View view) {
         String ButtonName = getResources().getResourceEntryName(view.getId());
         switch (ButtonName){
             case "first_btn":
-                Intent intent1 = new Intent(getApplicationContext(), SpecialistEditActivity.class);
+                Intent intent1 = new Intent(getApplicationContext(), SpecialistPointsActivity.class);
                 intent1.putExtra("ActiveSpecialist", (Serializable) specialist);
                 intent1.putExtra("KEY", separatorr);
                 startActivity(intent1);

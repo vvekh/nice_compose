@@ -1,5 +1,9 @@
 package com.example.diplomast.Adapters;
 
+import static androidx.core.content.ContextCompat.startActivity;
+
+import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +20,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.diplomast.DTO.Specialist;
 import com.example.diplomast.Retrofit.APIclient;
 import com.example.diplomast.Retrofit.APIinterface;
+import com.example.diplomast.SpecialistEditActivity;
+import com.example.diplomast.SpecialistProfileActivity;
 
+import java.io.Serializable;
 import java.util.List;
 
 import okhttp3.ResponseBody;
@@ -40,7 +47,7 @@ public class SpecialistAdapter extends RecyclerView.Adapter<SpecialistAdapter.Sp
     @Override
     public int getItemViewType(int position) {
         Specialist specialist = specialists.get(position);
-        int specialistId = specialist.id; // Предполагается, что у Specialist есть метод getId()
+        int specialistId = specialist.id;
         if (containsSpecialistById(favoriteSpecialists, specialistId)) {
             return TYPE_FAVORITE;
         } else {
@@ -49,9 +56,11 @@ public class SpecialistAdapter extends RecyclerView.Adapter<SpecialistAdapter.Sp
     }
 
     private boolean containsSpecialistById(List<Specialist> specialists, int id) {
-        for (Specialist specialist : specialists) {
-            if (specialist.id == id) {
-                return true;
+        if (specialists != null){
+            for (Specialist specialist : specialists) {
+                if (specialist.id == id) {
+                    return true;
+                }
             }
         }
         return false;
@@ -79,6 +88,23 @@ public class SpecialistAdapter extends RecyclerView.Adapter<SpecialistAdapter.Sp
         } else if (specialist.graduationid == 2) {
             holder.SpEducate1.setText("Два полных высших образования");
         }
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Обработка клика на элементе списка
+                // Открываем профиль специалиста
+                showSpecialist(v.getContext(), specialist);
+            }
+        });
+    }
+
+    private void showSpecialist(Context context, Specialist specialist){
+        String Enable = "false";
+        Intent intent = new Intent(context, SpecialistProfileActivity.class);
+        intent.putExtra("ActiveSpecialist", (Serializable) specialist);
+        intent.putExtra("Enable", Enable);
+        context.startActivity(intent);
     }
 
     @Override

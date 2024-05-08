@@ -13,6 +13,7 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
+import retrofit2.http.HTTP;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
@@ -68,4 +69,10 @@ public interface APIinterface {
     @Headers("Accept: application/json")
     @POST("Note/Insert")
     Call<String> insertNote(@Body Note note);
+    @Headers("Accept: application/json")
+    @POST("Specialist/{id}/AddPoint")
+    Call<Void> addCriteriaToSpecialist(@Path("id") int id, @Body List<Integer> criteriaIds);
+    @Headers("Accept: application/json")
+    @HTTP(method = "DELETE", path = "Specialist/{id}/DeletePoint", hasBody = true)
+    public Call<Void> deleteCriteriaFromSpecialist(@Path("id") int id, @Body List<Integer> criteriaIds);
 }

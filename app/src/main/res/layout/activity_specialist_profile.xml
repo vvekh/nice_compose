@@ -58,13 +58,30 @@
           android:layout_width="match_parent"
           android:layout_height="wrap_content"/>
     </LinearLayout>
+
+    <LinearLayout android:id="@+id/show_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginHorizontal="25dp"
+        android:layout_marginVertical="10dp">
+      <TextView android:id="@+id/timeline_view"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:textSize="18dp" android:textStyle="bold" android:textColor="@color/purple"/>
+      <TextView android:id="@+id/price_view"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:textSize="18dp" android:textStyle="bold" android:textColor="@color/purple"/>
+    </LinearLayout>
+
     <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:layout_marginBottom="10dp"
         android:scrollbars="none">
-      <LinearLayout
+      <LinearLayout android:id="@+id/panel_layout"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:orientation="horizontal">
