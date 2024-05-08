@@ -1,9 +1,11 @@
 package com.example.diplomast;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
@@ -22,6 +24,7 @@ import com.example.diplomast.DTO.Specialist;
 import com.example.diplomast.Retrofit.APIclient;
 import com.example.diplomast.Retrofit.APIinterface;
 
+import java.io.Serializable;
 import java.util.List;
 
 import retrofit2.Call;
@@ -99,5 +102,11 @@ public class SpecialistListActivity extends AppCompatActivity {
                 }
             });
         }
+    }
+
+    public void FavoritesOnClick(View view){
+        Intent intent = new Intent(this, FavouritesActivity.class);
+        intent.putExtra("ActiveClient", (Serializable) client);
+        startActivity(intent);
     }
 }

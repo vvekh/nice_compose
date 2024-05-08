@@ -36,7 +36,7 @@
             android:background="@drawable/siren_border"
             android:layout_gravity="center" android:orientation="vertical">
 
-            <ImageView
+            <ImageView android:onClick="FavoritesOnClick"
                 android:id="@+id/liked_btn"
                 android:layout_width="35dp"
                 android:layout_height="32dp"
