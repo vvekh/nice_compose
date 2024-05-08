@@ -29,7 +29,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class StartActivity extends AppCompatActivity {
-    APIinterface api;
+    APIinterface api; String blank_id;
     Boolean i = true;
     String separatorr;
     EditText LoginBox, PasswordBox, PasswordBox2;
@@ -144,10 +144,7 @@ public class StartActivity extends AppCompatActivity {
                 public void onResponse(Call<Specialist> call, Response<Specialist> response) {
                     if (response.isSuccessful()){
                         Specialist specialist = response.body();
-                        Intent intent = new Intent(getApplicationContext(), SpecialistProfileActivity.class);
-                        intent.putExtra("ActiveSpecialist", (Serializable) specialist);
-                        intent.putExtra("KEY", separatorr);
-                        startActivity(intent);
+                        SpecNavigation(specialist);
                     }else {
                         Toast.makeText(getApplicationContext(), "Неверный логин или пароль", Toast.LENGTH_SHORT).show();
                         Log.d("BAD RESPONSE", String.valueOf(response.body()));
@@ -163,15 +160,28 @@ public class StartActivity extends AppCompatActivity {
     }
 
     private void SpecNavigation(Specialist specialist){
-        if (specialist.id == 0){
-            //Intent intent = new Intent(getApplicationContext(), ЗАЯВКА_ОТКЛОНЕНА.class);
-            //startActivity(intent);
-        } else if (specialist.id == 3) {
-            //Intent intent = new Intent(getApplicationContext(), ЗАЯВКА_НА_РАССМОТРЕНИИ.class);
-            //startActivity(intent);
-        } else if (specialist.id == 4) {
-            //Intent intent = new Intent(getApplicationContext(), ПРОФИЛЬ_ЗАБЛОКИРОВАН.class);
-            //startActivity(intent);
+        if ("0".equals(specialist.status)){
+            //ЗАЯВКА_ОТКЛОНЕНА
+            blank_id = "0";
+            Intent intent = new Intent(getApplicationContext(), BlankActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.putExtra("blank_id", blank_id);
+            intent.putExtra("ActiveSpecialist", (Serializable) specialist);
+            startActivity(intent);
+        } else if ("3".equals(specialist.status)) {
+            //ЗАЯВКА_НА_РАССМОТРЕНИИ
+            blank_id = "3";
+            Intent intent = new Intent(getApplicationContext(), BlankActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.putExtra("blank_id", blank_id);
+            startActivity(intent);
+        } else if ("4".equals(specialist.status)) {
+            //ПРОФИЛЬ_ЗАБЛОКИРОВАН
+            blank_id = "4";
+            Intent intent = new Intent(getApplicationContext(), BlankActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.putExtra("blank_id", blank_id);
+            startActivity(intent);
         }else {
             Intent intent = new Intent(getApplicationContext(), SpecialistProfileActivity.class);
             intent.putExtra("ActiveSpecialist", (Serializable) specialist);

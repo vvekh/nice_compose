@@ -39,7 +39,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class SpecialistEditActivity extends AppCompatActivity {
-    APIinterface api; Specialist specialist;
+    APIinterface api; Specialist specialist; String blank_id;
     TextView LoginView, InfoView;
     LinearLayout CalendarLayout, DocLayout;
     EditText FioBox, LoginBox, PriceBox;
@@ -147,7 +147,6 @@ public class SpecialistEditActivity extends AppCompatActivity {
                         int FinalAge = Age;
                         runOnUiThread(() -> {
                             CalendarLayout.setVisibility(View.GONE);
-                            DocLayout.setVisibility(View.GONE);
                             PriceBox.setText(specialist.price);
                             InfoView.setText(specialist.username + " " + specialist.usersurname + ", " + FinalAge + AgeSuffix);
                             FioBox.setText(specialist.usersurname + " " + specialist.username);
@@ -161,12 +160,29 @@ public class SpecialistEditActivity extends AppCompatActivity {
             TimelineBox.setSelection(0);
             SexBox.setSelection(0);
         }
+
+        loadFields(specialist);
     }
 
-    public void SavedocOnClick(View view) { //Сохранение документа
+    private void loadFields(Specialist spec){
+        if ("0".equals(spec.status)){
+            FioBox.setEnabled(false);
+            LoginBox.setEnabled(false);
+            PriceBox.setEnabled(false);
+            BirthdateBox.setEnabled(false);
+            TimelineBox.setEnabled(false);
+            SexBox.setEnabled(false);
+        }
+
+        if ("1".equals(spec.status)){
+            DocLayout.setVisibility(View.GONE);
+        }
     }
 
-    public void Savedoc2OnClick(View view) { //Сохранение документа
+    public void SavedocOnClick(View view) { //Сохранение документа об образовании
+    }
+
+    public void Savedoc2OnClick(View view) { //Сохранение документа о дополнительном образовании
     }
 
     public void SaveOnClick(View view) {
@@ -215,7 +231,9 @@ public class SpecialistEditActivity extends AppCompatActivity {
                     Log.e("ERROR", t.getMessage());
                 }
             });
-        }else { //новый аккаунт
+        } else if (specialist.status.equals("0")) {
+            
+        } else { //новый аккаунт
             String selectedDate;
             int year = BirthdateBox.getYear();
             int month = BirthdateBox.getMonth();
@@ -244,7 +262,11 @@ public class SpecialistEditActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(Call<Void> call, Response<Void> response) {
                     Log.d("SUCCESS", response.message());
-                    //заглушка о том, что аккаунт на рассмотрении
+
+                    Intent intent = new Intent(getApplicationContext(), BlankActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.putExtra("blank_id", blank_id);
+                    startActivity(intent);
 
                 }
                 @Override
