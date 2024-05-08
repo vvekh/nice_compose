@@ -65,7 +65,7 @@ public class SpecialistListActivity extends AppCompatActivity {
                     if (response.isSuccessful()) {
                         List<Specialist> specialists = response.body();
                         // Создание и установка адаптера для RecyclerView
-                        SpecialistAdapter adapter = new SpecialistAdapter(specialists, favouriteSpecialists);
+                        SpecialistAdapter adapter = new SpecialistAdapter(specialists, favouriteSpecialists, client);
                         SpecView.setAdapter(adapter);
                     } else {
                         Log.e("API Error", "Failed to retrieve favorite specialists. Error: " + response.message());
@@ -86,7 +86,7 @@ public class SpecialistListActivity extends AppCompatActivity {
                     if (response.isSuccessful()) {
                         List<Specialist> specialists = response.body();
                         // Создание и установка адаптера для RecyclerView
-                        SpecialistAdapter adapter = new SpecialistAdapter(specialists, favouriteSpecialists);
+                        SpecialistAdapter adapter = new SpecialistAdapter(specialists, favouriteSpecialists, client);
                         SpecView.setAdapter(adapter);
                     } else {
                         Log.e("API Error", "Failed to retrieve favorite specialists. Error: " + response.message());

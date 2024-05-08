@@ -32,7 +32,7 @@ public class ClientPointsActivity extends AppCompatActivity {
     RecyclerView PointView;
     private List<Integer> selectedIds;
     List<Specialist> favouriteSpecialists;
-    private ClientPointAdapter clientPointAdapter;
+    private ClientPointAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,8 +76,8 @@ public class ClientPointsActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(Call<List<PointDTO>> call, Response<List<PointDTO>> response) {
                     List<PointDTO> points = response.body();
-                    clientPointAdapter = new ClientPointAdapter(points, selectedIds);
-                    PointView.setAdapter(clientPointAdapter);
+                    adapter = new ClientPointAdapter(points, selectedIds);
+                    PointView.setAdapter(adapter);
                 }
                 @Override
                 public void onFailure(Call<List<PointDTO>> call, Throwable t) {
@@ -89,7 +89,7 @@ public class ClientPointsActivity extends AppCompatActivity {
 
     public void ClearOnClick(View view) {
         selectedIds.clear();
-        clientPointAdapter.notifyDataSetChanged();
+        adapter.notifyDataSetChanged();
     }
 
     public void SearchOnClick(View view) {

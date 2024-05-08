@@ -100,6 +100,10 @@ public class ClientProfileActivity extends AppCompatActivity {
                 startActivity(intent1);
                 break;
             case "second_btn":
+                Intent intent2 = new Intent(getApplicationContext(), SpecialistListActivity.class);
+                intent2.putExtra("ActiveClient", (Serializable) client);
+                intent2.putExtra("KEY", separatorr);
+                startActivity(intent2);
                 break;
             case "third_btn":
                 Intent intent3 = new Intent(getApplicationContext(), NotesListActivity.class);

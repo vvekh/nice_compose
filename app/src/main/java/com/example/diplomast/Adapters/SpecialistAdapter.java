@@ -2,8 +2,12 @@ package com.example.diplomast.Adapters;
 
 import static androidx.core.content.ContextCompat.startActivity;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +19,7 @@ import com.example.diplomast.DTO.Client;
 import com.example.diplomast.R;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.diplomast.DTO.Specialist;
@@ -37,11 +42,15 @@ public class SpecialistAdapter extends RecyclerView.Adapter<SpecialistAdapter.Sp
     private static final int TYPE_NORMAL = 1;
 
     private List<Specialist> specialists;
-    private List<Specialist> favoriteSpecialists; // Список избранных специалистов
+    private List<Specialist> favoriteSpecialists;
+    private Client client;
+    private APIinterface api;
 
-    public SpecialistAdapter(List<Specialist> specialists, List<Specialist> favoriteSpecialists) {
+    public SpecialistAdapter(List<Specialist> specialists, List<Specialist> favoriteSpecialists, Client client) {
         this.specialists = specialists;
         this.favoriteSpecialists = favoriteSpecialists;
+        this.client = client;
+        this.api = APIclient.start().create(APIinterface.class);
     }
 
     @Override
@@ -89,12 +98,58 @@ public class SpecialistAdapter extends RecyclerView.Adapter<SpecialistAdapter.Sp
             holder.SpEducate1.setText("Два полных высших образования");
         }
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
+        holder.itemView.setOnClickListener(v -> {
+            showSpecialist(v.getContext(), specialist);
+        });
+
+        holder.itemView.setOnLongClickListener(v -> {
+            if (!containsSpecialistById(favoriteSpecialists, specialist.id)) {
+                addFavoriteSpecialist(client.id, specialist.id);
+                favoriteSpecialists.add(specialist);
+                notifyDataSetChanged();
+            } else {
+                removeFavoriteSpecialist(client.id, specialist.id);
+                favoriteSpecialists.removeIf(s -> s.id == specialist.id);
+                notifyDataSetChanged();
+            }
+            return true;
+        });
+    }
+
+    private void addFavoriteSpecialist(int clientId, int specialistId) {
+        Call<ResponseBody> call = api.addFavoriteSpecialist(clientId, specialistId);
+        call.enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onClick(View v) {
-                // Обработка клика на элементе списка
-                // Открываем профиль специалиста
-                showSpecialist(v.getContext(), specialist);
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    Log.d("SUCCESS", "Специалист добавлен в избранное");
+                } else {
+                    Log.d("FAIL", "Ошибка при добавлении специалиста в избранное");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.d("FAIL", t.getMessage());
+            }
+        });
+    }
+
+    private void removeFavoriteSpecialist(int clientId, int specialistId) {
+        Call<ResponseBody> call = api.removeFavoriteSpecialist(clientId, specialistId);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    Log.d("SUCCESS", "Специалист удален из избранного");
+                } else {
+                    Log.d("FAIL", "Ошибка при удалении специалиста из избранного");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.d("FAIL", t.getMessage());
             }
         });
     }
@@ -108,9 +163,7 @@ public class SpecialistAdapter extends RecyclerView.Adapter<SpecialistAdapter.Sp
     }
 
     @Override
-    public int getItemCount() {
-        return specialists.size();
-    }
+    public int getItemCount() {return specialists.size();}
 
     public static class SpecialistViewHolder extends RecyclerView.ViewHolder {
         TextView SpName;
