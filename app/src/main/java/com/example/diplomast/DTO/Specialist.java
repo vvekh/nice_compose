@@ -16,4 +16,6 @@ public class Specialist implements Serializable {
     public int timelineid;
     public String price;
     public String status;
+    public String email;
+    public String phone;
 }

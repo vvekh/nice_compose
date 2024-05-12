@@ -33,6 +33,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -40,7 +42,7 @@ import retrofit2.Response;
 
 public class SpecialistEditActivity extends AppCompatActivity {
     APIinterface api; Specialist specialist; String blank_id;
-    TextView LoginView, InfoView;
+    TextView LoginView, InfoView, EmailView, PhoneView;
     LinearLayout CalendarLayout, DocLayout;
     EditText FioBox, LoginBox, PriceBox;
     DatePicker BirthdateBox; Spinner TimelineBox, SexBox;
@@ -59,6 +61,8 @@ public class SpecialistEditActivity extends AppCompatActivity {
         });
         api = APIclient.start().create(APIinterface.class);
         specialist = (Specialist) getIntent().getSerializableExtra("ActiveSpecialist");
+        EmailView = findViewById(R.id.email_box);
+        PhoneView = findViewById(R.id.phone_box);
         LoginView = findViewById(R.id.login_view);
         InfoView = findViewById(R.id.info_view);
         CalendarLayout = findViewById(R.id.calendar_layout);
@@ -150,6 +154,8 @@ public class SpecialistEditActivity extends AppCompatActivity {
                             PriceBox.setText(specialist.price);
                             InfoView.setText(specialist.username + " " + specialist.usersurname + ", " + FinalAge + AgeSuffix);
                             FioBox.setText(specialist.usersurname + " " + specialist.username);
+                            EmailView.setText(specialist.email);
+                            PhoneView.setText(specialist.phone);
                         });
                     } catch (ParseException e) {
                         e.printStackTrace();
@@ -198,7 +204,16 @@ public class SpecialistEditActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "Введите сумму консультации!", Toast.LENGTH_SHORT).show();
         } else if (PriceBox.getText().toString().equals("0")) {
             Toast.makeText(getApplicationContext(), "Введите корректную сумму консультации!", Toast.LENGTH_SHORT).show();
-        } else {
+        } else if (EmailView.getText().toString().equals("")){
+            Toast.makeText(getApplicationContext(), "Введите адрес почты!", Toast.LENGTH_SHORT).show();
+        } else if (PhoneView.getText().toString().equals("")){
+            Toast.makeText(getApplicationContext(), "Введите номер телефона!", Toast.LENGTH_SHORT).show();
+        } else if (!isValidEmail(EmailView.getText().toString())) {
+            Toast.makeText(getApplicationContext(), "Введите корректный адрес почты!", Toast.LENGTH_SHORT).show();
+        } else if (!isValidPhone(PhoneView.getText().toString())){
+            Toast.makeText(getApplicationContext(), "Введите корректный номер телефона!", Toast.LENGTH_SHORT).show();
+        }
+        else {
             Saving();
         }
     } //Кнопка сохранения пользователя в соответствии с условиями
@@ -209,6 +224,8 @@ public class SpecialistEditActivity extends AppCompatActivity {
             String[] parts = fio.split(" ");
             specialist.usersurname = parts[0];
             specialist.username = parts[1];
+            specialist.email = EmailView.getText().toString();
+            specialist.phone = PhoneView.getText().toString();
             specialist.login = LoginBox.getText().toString();
             specialist.timelineid = TimelineBox.getSelectedItemPosition();
             specialist.price = String.valueOf(PriceBox.getText());
@@ -249,6 +266,8 @@ public class SpecialistEditActivity extends AppCompatActivity {
             String[] parts = fio.split(" ");
             specialist.usersurname = parts[0];
             specialist.username = parts[1];
+            specialist.email = EmailView.getText().toString();
+            specialist.phone = PhoneView.getText().toString();
             specialist.login = LoginBox.getText().toString();
             specialist.timelineid = TimelineBox.getSelectedItemPosition();
             specialist.sexid = SexBox.getSelectedItemPosition();
@@ -276,4 +295,16 @@ public class SpecialistEditActivity extends AppCompatActivity {
             });
         }
     } //Функция сохранения пользователя
+
+    public static boolean isValidEmail(String email) {
+        String pattern = "^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$";
+        Pattern r = Pattern.compile(pattern);
+        Matcher m = r.matcher(email);
+        return m.matches();
+    }
+    public static boolean isValidPhone(String phoneNumber) {
+        String pattern = "^8\\d{10}$";
+        return phoneNumber.matches(pattern);
+    }
+
 }

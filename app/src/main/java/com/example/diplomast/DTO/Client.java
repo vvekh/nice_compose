@@ -11,4 +11,5 @@ public class Client implements Serializable {
     public String login;
     public String password;
     public int timelineid;
+    public String phone;
 }

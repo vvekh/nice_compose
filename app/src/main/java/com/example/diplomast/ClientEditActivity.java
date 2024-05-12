@@ -39,7 +39,7 @@ import retrofit2.Response;
 
 public class ClientEditActivity extends AppCompatActivity {
     APIinterface api; Client client; Boolean NewOrNot;
-    TextView LoginView, InfoView;
+    TextView LoginView, InfoView, PhoneView;
     LinearLayout CalendarLayout;
     EditText NameBox, LoginBox; Spinner TimelineBox; DatePicker BirthdateBox;
 
@@ -57,6 +57,7 @@ public class ClientEditActivity extends AppCompatActivity {
         api = APIclient.start().create(APIinterface.class);
         client = (Client) getIntent().getSerializableExtra("ActiveClient");
         CalendarLayout = findViewById(R.id.calendar_layout);
+        PhoneView = findViewById(R.id.phone_box);
         LoginView = findViewById(R.id.login_view);
         InfoView = findViewById(R.id.info_view);
         NameBox = findViewById(R.id.name_box);
@@ -133,6 +134,7 @@ public class ClientEditActivity extends AppCompatActivity {
                         runOnUiThread(() -> {
                             InfoView.setText(client.username + ", " + FinalAge + AgeSuffix);
                             NameBox.setText(client.username);
+                            PhoneView.setText(client.phone);
                         });
                     } catch (ParseException e) {
                         e.printStackTrace();
@@ -152,7 +154,12 @@ public class ClientEditActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "Введите имя!", Toast.LENGTH_SHORT).show();
         } else if (TimelineBox.getSelectedItemPosition() == 0) {
             Toast.makeText(getApplicationContext(), "Выберите часовой пояс!", Toast.LENGTH_SHORT).show();
-        } else {
+        } else if (PhoneView.getText().toString().equals("")){
+            Toast.makeText(getApplicationContext(), "Введите номер телефона!", Toast.LENGTH_SHORT).show();
+        } else if (!isValidPhone(PhoneView.getText().toString())){
+            Toast.makeText(getApplicationContext(), "Введите корректный номер телефона!", Toast.LENGTH_SHORT).show();
+        }
+        else {
             Saving();
         }
     }
@@ -161,6 +168,7 @@ public class ClientEditActivity extends AppCompatActivity {
         if (NewOrNot == false){ //существующий аккаунт
             client.username = NameBox.getText().toString();
             client.login = LoginBox.getText().toString();
+            client.phone = PhoneView.getText().toString();
             client.timelineid = TimelineBox.getSelectedItemPosition() + 1;
             Call<Void> call = api.updateClient(client.id, client);
             call.enqueue(new Callback<Void>() {
@@ -194,6 +202,7 @@ public class ClientEditActivity extends AppCompatActivity {
 
             client.username = String.valueOf(NameBox.getText());
             client.login = String.valueOf(LoginBox.getText());
+            client.phone = PhoneView.getText().toString();
             client.timelineid = TimelineBox.getSelectedItemPosition() + 1;
             client.birthdate = selectedDate;
 
@@ -213,5 +222,10 @@ public class ClientEditActivity extends AppCompatActivity {
                 }
             });
         }
+    }
+
+    public static boolean isValidPhone(String phoneNumber) {
+        String pattern = "^8\\d{10}$";
+        return phoneNumber.matches(pattern);
     }
 }

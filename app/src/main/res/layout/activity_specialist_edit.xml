@@ -57,6 +57,16 @@
                     android:layout_height="wrap_content"
                     android:backgroundTint="@color/gray"
                     android:hint="Ваш логин..." android:textSize="16dp"/>
+                <EditText android:id="@+id/email_box"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/gray"
+                    android:hint="Ваш email..." android:textSize="16dp"/>
+                <EditText android:id="@+id/phone_box"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/gray"
+                    android:hint="Ваш номер телефона..." android:textSize="16dp"/>
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
