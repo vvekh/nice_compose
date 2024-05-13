@@ -1,6 +1,7 @@
 package com.example.diplomast;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -24,8 +25,10 @@ import com.example.diplomast.Adapters.PointAdapter;
 import com.example.diplomast.DTO.PointDTO;
 import com.example.diplomast.DTO.Specialist;
 import com.example.diplomast.DTO.Timeline;
+import com.example.diplomast.DTO.Work;
 import com.example.diplomast.Retrofit.APIclient;
 import com.example.diplomast.Retrofit.APIinterface;
+import com.google.gson.Gson;
 
 import java.io.Serializable;
 import java.text.ParseException;
@@ -83,6 +86,21 @@ public class SpecialistProfileActivity extends AppCompatActivity {
         PointView.setLayoutManager(layoutManager);
         LoginView.setText("@" + specialist.login);
         new Thread(() -> {
+            Call<List<Work>> call1 = api.getWorksBySpecialistId(specialist.id);
+            call1.enqueue(new Callback<List<Work>>() {
+                @Override
+                public void onResponse(Call<List<Work>> call, Response<List<Work>> response) {
+                    Gson gson = new Gson();
+                    String worksJson = gson.toJson(response.body());
+                    SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putString("worksList", worksJson);
+                    editor.apply();
+                }
+                @Override
+                public void onFailure(Call<List<Work>> call, Throwable t) {Log.d("FAIL", t.getMessage());}
+            });
+
             Call<List<PointDTO>> call = api.getSpecialistPoints(specialist.id);
             call.enqueue(new Callback<List<PointDTO>>() {
                 @Override
@@ -104,8 +122,8 @@ public class SpecialistProfileActivity extends AppCompatActivity {
                 }
             });
 
-            Call<List<Timeline>> call1 = api.getAllTimelines();
-            call1.enqueue(new Callback<List<Timeline>>() {
+            Call<List<Timeline>> call2 = api.getAllTimelines();
+            call2.enqueue(new Callback<List<Timeline>>() {
                 @Override
                 public void onResponse(Call<List<Timeline>> call, Response<List<Timeline>> response) {
                     lines = response.body();

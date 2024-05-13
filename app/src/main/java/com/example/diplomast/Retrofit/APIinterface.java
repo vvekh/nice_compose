@@ -5,6 +5,7 @@ import com.example.diplomast.DTO.Note;
 import com.example.diplomast.DTO.PointDTO;
 import com.example.diplomast.DTO.Specialist;
 import com.example.diplomast.DTO.Timeline;
+import com.example.diplomast.DTO.Work;
 
 import java.util.List;
 
@@ -74,5 +75,28 @@ public interface APIinterface {
     Call<Void> addCriteriaToSpecialist(@Path("id") int id, @Body List<Integer> criteriaIds);
     @Headers("Accept: application/json")
     @HTTP(method = "DELETE", path = "Specialist/{id}/DeletePoint", hasBody = true)
-    public Call<Void> deleteCriteriaFromSpecialist(@Path("id") int id, @Body List<Integer> criteriaIds);
+    Call<Void> deleteCriteriaFromSpecialist(@Path("id") int id, @Body List<Integer> criteriaIds);
+    @Headers("Accept: application/json")
+    @POST("Client/{id}/Work/Add/{specialistId}")
+    Call<Void> addWork(@Path("id") int id, @Path("specialistId") int specialistId);
+    @Headers("Accept: application/json")
+    @PUT("Specialist/{id}/Work/{clientId}/StartWorkSp")
+    Call<Void> startWorkSp(@Path("id") int id, @Path("clientId") int clientId);
+    @Headers("Accept: application/json")
+    @PUT("Client/{id}/Work/{specialistId}/StartWorkCl")
+    Call<Void> startWorkCl(@Path("id") int id, @Path("specialistId") int specialistId);
+    @Headers("Accept: application/json")
+    @PUT("Specialist/{id}/Work/{clientId}/EndWorkSp")
+    Call<Void> endWorkSp(@Path("id") int id, @Path("clientId") int clientId);
+    @Headers("Accept: application/json")
+    @PUT("Client/{id}/Work/{specialistId}/EndWorkCl")
+    Call<Void> endWorkCl(@Path("id") int id, @Path("specialistId") int specialistId);
+    @Headers("Accept: application/json")
+    @GET("Client/{id}/Work")
+    Call<List<Work>> getWorksByClientId(@Path("id") int clientId);
+    @Headers("Accept: application/json")
+    @GET("Specialist/{id}/Work")
+    Call<List<Work>> getWorksBySpecialistId(@Path("id") int specialistId);
+
+
 }

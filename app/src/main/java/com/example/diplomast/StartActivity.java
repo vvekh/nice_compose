@@ -21,6 +21,7 @@ import com.example.diplomast.DTO.Client;
 import com.example.diplomast.DTO.Specialist;
 import com.example.diplomast.Retrofit.APIclient;
 import com.example.diplomast.Retrofit.APIinterface;
+import com.google.gson.Gson;
 
 import java.io.Serializable;
 
@@ -30,7 +31,7 @@ import retrofit2.Response;
 
 public class StartActivity extends AppCompatActivity {
     APIinterface api; String blank_id;
-    Boolean i = true;
+    Boolean i = true; String b;
     String separatorr;
     EditText LoginBox, PasswordBox, PasswordBox2;
     Button TopBtn, BottomBtn;
@@ -57,6 +58,12 @@ public class StartActivity extends AppCompatActivity {
         RegLayout2 = findViewById(R.id.reg_layout2);
 
         loadSavedCredentials();
+
+        SharedPreferences prefs = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+        b = prefs.getString("login", "nope");
+        if (b != "nope"){
+            Authorization(LoginBox.getText().toString(), PasswordBox.getText().toString());
+        }
     }
 
     public void TopOnClick(View view) {
@@ -102,6 +109,15 @@ public class StartActivity extends AppCompatActivity {
             intent.putExtra("ActiveClient", (Serializable) newclient);
             intent.putExtra("KEY", separatorr);
             startActivity(intent);
+
+            Gson gson = new Gson();
+            String clientJson = gson.toJson(newclient);
+
+            // Save to SharedPreferences
+            SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString("tempUser", clientJson);
+            editor.apply();
         } else if ("Специалист".equals(separatorr)){
             Specialist newspecialist = new Specialist();
             newspecialist.login = login;
@@ -111,8 +127,18 @@ public class StartActivity extends AppCompatActivity {
             intent.putExtra("ActiveSpecialist", (Serializable) newspecialist);
             intent.putExtra("KEY", separatorr);
             startActivity(intent);
+
+            Gson gson = new Gson();
+            String specialistJson = gson.toJson(newspecialist);
+
+            // Save to SharedPreferences
+            SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString("tempUser", specialistJson);
+            editor.apply();
         }
         saveCredentials(login, password);
+
     }
 
     private void Authorization(String login, String password){
@@ -127,6 +153,16 @@ public class StartActivity extends AppCompatActivity {
                         intent.putExtra("ActiveClient", (Serializable) tempclient);
                         intent.putExtra("KEY", separatorr);
                         startActivity(intent);
+
+                        // Convert Client to JSON string
+                        Gson gson = new Gson();
+                        String clientJson = gson.toJson(tempclient);
+
+                        // Save to SharedPreferences
+                        SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putString("tempUser", clientJson);
+                        editor.apply();
                     } else {
                         Toast.makeText(getApplicationContext(), "Неверный логин или пароль", Toast.LENGTH_SHORT).show();
                         Log.d("BAD RESPONSE", String.valueOf(response.body()));
@@ -145,6 +181,16 @@ public class StartActivity extends AppCompatActivity {
                     if (response.isSuccessful()){
                         Specialist specialist = response.body();
                         SpecNavigation(specialist);
+
+                        // Convert Specialist to JSON string
+                        Gson gson = new Gson();
+                        String specialistJson = gson.toJson(specialist);
+
+                        // Save to SharedPreferences
+                        SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putString("tempUser", specialistJson);
+                        editor.apply();
                     }else {
                         Toast.makeText(getApplicationContext(), "Неверный логин или пароль", Toast.LENGTH_SHORT).show();
                         Log.d("BAD RESPONSE", String.valueOf(response.body()));
@@ -157,6 +203,7 @@ public class StartActivity extends AppCompatActivity {
             });
         }
         saveCredentials(login, password);
+
     }
 
     private void SpecNavigation(Specialist specialist){
