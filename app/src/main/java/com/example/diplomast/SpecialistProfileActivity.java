@@ -218,7 +218,7 @@ public class SpecialistProfileActivity extends AppCompatActivity {
                 startActivity(intent3);
                 break;
             case "fourth_btn":
-                Intent intent4 = new Intent(getApplicationContext(), SpecialistEditActivity.class);
+                Intent intent4 = new Intent(getApplicationContext(), AboutActivity.class);
                 intent4.putExtra("ActiveSpecialist", (Serializable) specialist);
                 intent4.putExtra("KEY", separatorr);
                 startActivity(intent4);

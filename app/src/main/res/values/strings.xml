@@ -6,4 +6,9 @@
     <string name="password_hint">Введите пароль...</string>
     <string name="password_hint2">Повторите пароль...</string>
     <string name="edit_text"><b>Давайте познакомимся поближе!</b></string>
+
+    <string name="about1">Безопасность и поддержка – залог успеха</string>
+    <string name="about2">Nice – квалифицированные психотерапевты и качественная психологическая помощь.</string>
+    <string name="about3">Удобство подбора по критериям, строгий отбор специалистов и конфиденциальность - это основные принципы, которых придерживается наш сервис.</string>
+    <string name="about4">Узнать о нас больше можно в социальных сетях!</string>
 </resources>

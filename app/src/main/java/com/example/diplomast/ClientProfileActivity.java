@@ -143,6 +143,10 @@ public class ClientProfileActivity extends AppCompatActivity {
                 startActivity(intent4);
                 break;
             case "fifth_btn":
+                Intent intent5 = new Intent(getApplicationContext(), AboutActivity.class);
+                intent5.putExtra("ActiveClient", (Serializable) client);
+                intent5.putExtra("KEY", separatorr);
+                startActivity(intent5);
                 break;
         }
     }
