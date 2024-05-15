@@ -1,6 +1,8 @@
 package com.example.diplomast;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -20,8 +22,9 @@ public class BlankActivity extends AppCompatActivity {
     String blank_id; Specialist specialist;
     String separatorr = "Специалист";
     TextView BlankTitle, BlankContent;
-    Button EditBtn;
+    Button EditBtn, ExitBtn;
 
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,9 +41,11 @@ public class BlankActivity extends AppCompatActivity {
         BlankTitle = findViewById(R.id.blank_title);
         BlankContent = findViewById(R.id.blank_content);
         EditBtn = findViewById(R.id.edit_btn);
+        ExitBtn = findViewById(R.id.exit_btn);
+
 
         if (blank_id != "0"){
-            EditBtn.setVisibility(View.INVISIBLE);
+            EditBtn.setVisibility(View.GONE);
         }
 
         loadBlank(blank_id);
@@ -62,7 +67,19 @@ public class BlankActivity extends AppCompatActivity {
             BlankContent.setText("Ваш аккаунт заблокирован.");
         }else if ("0".equals(id)){
             BlankTitle.setText("Аккаунт отклонён");
+            EditBtn.setVisibility(View.VISIBLE);
             BlankContent.setText("Ваш аккаунт отклонён администратором. Возможно Вы не добавили необходимые данные или они являются некорректными.");
         }
+    }
+
+    public void ExitOnClick(View view) {
+        SharedPreferences prefs = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.clear(); // Очистка всех значений
+        editor.apply();
+
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK); // Закрыть все предыдущие активити
+        startActivity(intent);
     }
 }

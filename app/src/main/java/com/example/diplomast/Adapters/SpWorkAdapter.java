@@ -100,6 +100,7 @@ public class SpWorkAdapter extends RecyclerView.Adapter<SpWorkAdapter.SpWorkView
                         @Override
                         public void onResponse(Call<Void> call, Response<Void> response) {
                             Toast.makeText(view.getContext(), "Успешно изменено!", Toast.LENGTH_SHORT).show();
+                            currentWork.status = "3";
                             notifyDataSetChanged();
                         }
                         @Override
@@ -112,6 +113,7 @@ public class SpWorkAdapter extends RecyclerView.Adapter<SpWorkAdapter.SpWorkView
                         @Override
                         public void onResponse(Call<Void> call, Response<Void> response) {
                             Toast.makeText(view.getContext(), "Успешно изменено!", Toast.LENGTH_SHORT).show();
+                            currentWork.status = "1";
                             notifyDataSetChanged();
                         }
                         @Override

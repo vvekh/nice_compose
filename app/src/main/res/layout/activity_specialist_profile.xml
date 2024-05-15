@@ -73,6 +73,15 @@
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:textSize="18dp" android:textStyle="bold" android:textColor="@color/purple"/>
+      <Button android:id="@+id/add_work_btn" android:onClick="WorkOnClick"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="25dp"
+          android:layout_marginBottom="10dp"
+          android:layout_gravity="center"
+          android:backgroundTint="@color/siren"
+          android:text="Начать работу со специалистом" android:textSize="17dp" android:fontFamily="casual"/>
+
     </LinearLayout>
 
     <HorizontalScrollView
@@ -92,6 +101,13 @@
             android:layout_marginLeft="20dp"
             android:onClick="PanelOnClick"
             android:src="@drawable/panel_5"/>
+        <ImageView
+            android:id="@+id/work_btn"
+            android:layout_width="233dp"
+            android:layout_height="298dp"
+            android:layout_marginLeft="20dp"
+            android:onClick="PanelOnClick"
+            android:src="@drawable/work_panel"/>
         <ImageView android:id="@+id/second_btn" android:onClick="PanelOnClick"
             android:layout_width="233dp"
             android:layout_height="298dp"

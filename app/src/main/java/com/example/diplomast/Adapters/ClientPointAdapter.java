@@ -8,7 +8,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.diplomast.DTO.PointDTO;
+import com.example.diplomast.DTO.Point;
 import com.example.diplomast.R;
 
 import java.util.List;
@@ -17,10 +17,10 @@ public class ClientPointAdapter extends RecyclerView.Adapter<ClientPointAdapter.
     private static final int NORMAL_VIEW_TYPE = 0;
     private static final int SELECTED_VIEW_TYPE = 1;
 
-    private List<PointDTO> points;
+    private List<Point> points;
     private List<Integer> selectedIds;
 
-    public ClientPointAdapter(List<PointDTO> points, List<Integer> selectedIds) {
+    public ClientPointAdapter(List<Point> points, List<Integer> selectedIds) {
         this.points = points;
         this.selectedIds = selectedIds;
     }
@@ -40,7 +40,7 @@ public class ClientPointAdapter extends RecyclerView.Adapter<ClientPointAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull PointViewHolder holder, int position) {
-        PointDTO point = points.get(position);
+        Point point = points.get(position);
         holder.bind(point);
 
         holder.itemView.setOnClickListener(v -> {
@@ -73,7 +73,7 @@ public class ClientPointAdapter extends RecyclerView.Adapter<ClientPointAdapter.
             pointNameTextView = itemView.findViewById(R.id.point_name_text_view);
         }
 
-        public void bind(PointDTO point) {
+        public void bind(Point point) {
             pointNameTextView.setText(point.pointname);
         }
     }

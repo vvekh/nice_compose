@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.example.diplomast.Adapters.SpecialistPointAdapter;
-import com.example.diplomast.DTO.PointDTO;
+import com.example.diplomast.DTO.Point;
 import com.example.diplomast.DTO.Specialist;
 import com.example.diplomast.Retrofit.APIclient;
 import com.example.diplomast.Retrofit.APIinterface;
@@ -31,8 +31,8 @@ import retrofit2.Response;
 public class SpecialistPointsActivity extends AppCompatActivity {
     APIinterface api;
     private SpecialistPointAdapter adapter;
-    List<PointDTO> points = new ArrayList<>();
-    List<PointDTO> specialistPoints = new ArrayList<>();
+    List<Point> points = new ArrayList<>();
+    List<Point> specialistPoints = new ArrayList<>();
     Specialist specialist;
     RecyclerView PointView;
     Button SaveBtn;
@@ -52,7 +52,7 @@ public class SpecialistPointsActivity extends AppCompatActivity {
         SaveBtn = findViewById(R.id.save_btn);
 
         api = APIclient.start().create(APIinterface.class);
-        specialistPoints = (List<PointDTO>) getIntent().getParcelableExtra("specialistPoints");
+        specialistPoints = (List<Point>) getIntent().getParcelableExtra("specialistPoints");
         specialist = (Specialist) getIntent().getSerializableExtra("ActiveSpecialist");
         StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
         PointView.setLayoutManager(layoutManager);
@@ -61,30 +61,30 @@ public class SpecialistPointsActivity extends AppCompatActivity {
     }
 
     private void fetchData() {
-        Call<List<PointDTO>> call = api.getAllPoints();
-        call.enqueue(new Callback<List<PointDTO>>() {
+        Call<List<Point>> call = api.getAllPoints();
+        call.enqueue(new Callback<List<Point>>() {
             @Override
-            public void onResponse(Call<List<PointDTO>> call, Response<List<PointDTO>> response) {
+            public void onResponse(Call<List<Point>> call, Response<List<Point>> response) {
                 points = response.body();
 
-                Call<List<PointDTO>> call1 = api.getSpecialistPoints(specialist.id);
-                call1.enqueue(new Callback<List<PointDTO>>() {
+                Call<List<Point>> call1 = api.getSpecialistPoints(specialist.id);
+                call1.enqueue(new Callback<List<Point>>() {
                     @Override
-                    public void onResponse(Call<List<PointDTO>> call, Response<List<PointDTO>> response) {
+                    public void onResponse(Call<List<Point>> call, Response<List<Point>> response) {
                         specialistPoints = response.body();
                         adapter = new SpecialistPointAdapter(points, specialistPoints, specialist.id);
                         PointView.setAdapter(adapter);
                     }
 
                     @Override
-                    public void onFailure(Call<List<PointDTO>> call, Throwable t) {
+                    public void onFailure(Call<List<Point>> call, Throwable t) {
                         Log.d("FAIL", t.getMessage());
                     }
                 });
             }
 
             @Override
-            public void onFailure(Call<List<PointDTO>> call, Throwable t) {
+            public void onFailure(Call<List<Point>> call, Throwable t) {
                 Log.d("FAIL", t.getMessage());
             }
         });

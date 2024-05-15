@@ -14,6 +14,7 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.diplomast.Adapters.ClWorkAdapter;
 import com.example.diplomast.Adapters.SpWorkAdapter;
 import com.example.diplomast.Adapters.SpecialistAdapter;
 import com.example.diplomast.DTO.Client;
@@ -64,7 +65,6 @@ public class WorksListActivity extends AppCompatActivity {
             String clientJson = sharedPreferences.getString("tempUser", "");
             if (!clientJson.isEmpty()) {
                 Client tempClient = gson.fromJson(clientJson, Client.class);
-
                 Call<List<Specialist>> call = api.getAllSpecialists();
                 call.enqueue(new Callback<List<Specialist>>() {
                     @Override
@@ -83,6 +83,19 @@ public class WorksListActivity extends AppCompatActivity {
             String specialistJson = sharedPreferences.getString("tempUser", "");
             if (!specialistJson.isEmpty()) {
                 Specialist tempSpecialist = gson.fromJson(specialistJson, Specialist.class);
+                Call<List<Client>> call = api.getAllClients();
+                call.enqueue(new Callback<List<Client>>() {
+                    @Override
+                    public void onResponse(Call<List<Client>> call, Response<List<Client>> response) {
+                        if (response.isSuccessful()) {
+                            List<Client> clients = response.body();
+                            ClWorkAdapter clWorkAdapter = new ClWorkAdapter(clients, workList, tempSpecialist);
+                            WorkView.setAdapter(clWorkAdapter);
+                        } else {Log.e("FAIL", response.message());}
+                    }
+                    @Override
+                    public void onFailure(Call<List<Client>> call, Throwable t) {Log.e("FAIL", t.getMessage());}
+                });
             }
         }
     }

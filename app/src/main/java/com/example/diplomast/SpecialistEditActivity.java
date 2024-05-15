@@ -171,15 +171,6 @@ public class SpecialistEditActivity extends AppCompatActivity {
     }
 
     private void loadFields(Specialist spec){
-        if ("0".equals(spec.status)){
-            FioBox.setEnabled(false);
-            LoginBox.setEnabled(false);
-            PriceBox.setEnabled(false);
-            BirthdateBox.setEnabled(false);
-            TimelineBox.setEnabled(false);
-            SexBox.setEnabled(false);
-        }
-
         if ("1".equals(spec.status)){
             DocLayout.setVisibility(View.GONE);
         }
@@ -249,7 +240,37 @@ public class SpecialistEditActivity extends AppCompatActivity {
                 }
             });
         } else if (specialist.status.equals("0")) {
-            
+            String fio = String.valueOf(FioBox.getText());
+            String[] parts = fio.split(" ");
+            specialist.usersurname = parts[0];
+            specialist.username = parts[1];
+            specialist.email = EmailView.getText().toString();
+            specialist.phone = PhoneView.getText().toString();
+            specialist.login = LoginBox.getText().toString();
+            specialist.timelineid = TimelineBox.getSelectedItemPosition();
+            specialist.price = String.valueOf(PriceBox.getText());
+
+            Call<Void> call = api.update2Specialist(specialist.id, specialist);
+            call.enqueue(new Callback<Void>() {
+                @Override
+                public void onResponse(Call<Void> call, Response<Void> response) {
+                    if (response.isSuccessful()) {
+                        Log.d("SUCCESS", "Data updated successfully");
+
+                        blank_id = "3";
+                        Intent intent = new Intent(getApplicationContext(), BlankActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        intent.putExtra("blank_id", blank_id);
+                        startActivity(intent);
+                    } else {
+                        Log.d("FAIL", response.message());
+                    }
+                }
+                @Override
+                public void onFailure(Call<Void> call, Throwable t) {
+                    Log.e("ERROR", t.getMessage());
+                }
+            });
         } else { //новый аккаунт
             String selectedDate;
             int year = BirthdateBox.getYear();
@@ -282,6 +303,7 @@ public class SpecialistEditActivity extends AppCompatActivity {
                 public void onResponse(Call<Void> call, Response<Void> response) {
                     Log.d("SUCCESS", response.message());
 
+                    blank_id = "3";
                     Intent intent = new Intent(getApplicationContext(), BlankActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                     intent.putExtra("blank_id", blank_id);

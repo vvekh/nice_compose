@@ -2,7 +2,6 @@ package com.example.diplomast;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.util.Log;
 import android.view.View;
 
@@ -15,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import com.example.diplomast.Adapters.ClientPointAdapter;
 import com.example.diplomast.DTO.Client;
-import com.example.diplomast.DTO.PointDTO;
+import com.example.diplomast.DTO.Point;
 import com.example.diplomast.DTO.Specialist;
 import com.example.diplomast.Retrofit.APIclient;
 import com.example.diplomast.Retrofit.APIinterface;
@@ -71,16 +70,16 @@ public class ClientPointsActivity extends AppCompatActivity {
                     Log.d("API Error", "Failed to retrieve favorite specialists. Error: " + t.getMessage());
                 }
             });
-            Call<List<PointDTO>> call1 = api.getAllPoints();
-            call1.enqueue(new Callback<List<PointDTO>>() {
+            Call<List<Point>> call1 = api.getAllPoints();
+            call1.enqueue(new Callback<List<Point>>() {
                 @Override
-                public void onResponse(Call<List<PointDTO>> call, Response<List<PointDTO>> response) {
-                    List<PointDTO> points = response.body();
+                public void onResponse(Call<List<Point>> call, Response<List<Point>> response) {
+                    List<Point> points = response.body();
                     adapter = new ClientPointAdapter(points, selectedIds);
                     PointView.setAdapter(adapter);
                 }
                 @Override
-                public void onFailure(Call<List<PointDTO>> call, Throwable t) {
+                public void onFailure(Call<List<Point>> call, Throwable t) {
                     Log.d("FAIL", t.getMessage());
                 }
             });

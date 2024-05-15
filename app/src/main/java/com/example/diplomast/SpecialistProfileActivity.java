@@ -5,32 +5,36 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.example.diplomast.Adapters.PointAdapter;
-import com.example.diplomast.DTO.PointDTO;
+import com.example.diplomast.DTO.Client;
+import com.example.diplomast.DTO.Point;
 import com.example.diplomast.DTO.Specialist;
 import com.example.diplomast.DTO.Timeline;
 import com.example.diplomast.DTO.Work;
 import com.example.diplomast.Retrofit.APIclient;
 import com.example.diplomast.Retrofit.APIinterface;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.io.Serializable;
+import java.lang.reflect.Type;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -43,13 +47,14 @@ import retrofit2.Response;
 
 public class SpecialistProfileActivity extends AppCompatActivity {
     private static final int REQUEST_CODE_FIRST_BTN = 1;
-    String Enable; List<Timeline> lines; List<PointDTO> points;
+    SharedPreferences sharedPreferences;
+    String Enable; List<Timeline> lines; List<Point> points;
     APIinterface api; Specialist specialist; String separatorr;
     LinearLayout PanelLayout, ShowLayout;
-    ImageView FirstBtn, SecondBtn, ThirdBtn, FourthBtn;
+    ImageView FirstBtn, SecondBtn, ThirdBtn, FourthBtn, WorkBtn;
     TextView LoginView, InfoView, GradView, GradView2, Ispoint, TimelineView, PriceView;
-    RecyclerView PointView;
-    Button ExitBtn;
+    RecyclerView PointView; List<Work> workList;
+    Button ExitBtn, AddWorkBtn;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -77,37 +82,44 @@ public class SpecialistProfileActivity extends AppCompatActivity {
         GradView2 = findViewById(R.id.grad2_view);
         PointView = findViewById(R.id.point_view);
         FirstBtn = findViewById(R.id.first_btn);
+        AddWorkBtn = findViewById(R.id.add_work_btn);
+        WorkBtn = findViewById(R.id.work_btn);
         SecondBtn = findViewById(R.id.second_btn);
         ThirdBtn = findViewById(R.id.third_btn);
         FourthBtn = findViewById(R.id.fourth_btn);
         ExitBtn = findViewById(R.id.exit_btn);
 
+        sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+
         StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
         PointView.setLayoutManager(layoutManager);
         LoginView.setText("@" + specialist.login);
         new Thread(() -> {
-            Call<List<Work>> call1 = api.getWorksBySpecialistId(specialist.id);
-            call1.enqueue(new Callback<List<Work>>() {
-                @Override
-                public void onResponse(Call<List<Work>> call, Response<List<Work>> response) {
-                    Gson gson = new Gson();
-                    String worksJson = gson.toJson(response.body());
-                    SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = sharedPreferences.edit();
-                    editor.putString("worksList", worksJson);
-                    editor.apply();
-                }
-                @Override
-                public void onFailure(Call<List<Work>> call, Throwable t) {Log.d("FAIL", t.getMessage());}
-            });
+            if ("Специалист".equals(separatorr)){
+                Call<List<Work>> call1 = api.getWorksBySpecialistId(specialist.id);
+                call1.enqueue(new Callback<List<Work>>() {
+                    @Override
+                    public void onResponse(Call<List<Work>> call, Response<List<Work>> response) {
+                        Gson gson = new Gson();
+                        String worksJson = gson.toJson(response.body());
+                        SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putString("workList", worksJson);
+                        editor.apply();
+                        Log.d("Okay", response.message());
+                    }
+                    @Override
+                    public void onFailure(Call<List<Work>> call, Throwable t) {Log.d("FAIL", t.getMessage());}
+                });
+            }
 
-            Call<List<PointDTO>> call = api.getSpecialistPoints(specialist.id);
-            call.enqueue(new Callback<List<PointDTO>>() {
+            Call<List<Point>> call = api.getSpecialistPoints(specialist.id);
+            call.enqueue(new Callback<List<Point>>() {
                 @Override
-                public void onResponse(Call<List<PointDTO>> call, Response<List<PointDTO>> response) {
+                public void onResponse(Call<List<Point>> call, Response<List<Point>> response) {
                     if (response.isSuccessful()) {
                         points = response.body();
-                        PointAdapter adapter = new PointAdapter(points); // listOfPoints - список объектов PointDTO
+                        PointAdapter adapter = new PointAdapter(points); // listOfPoints - список объектов Point
                         PointView.setLayoutManager(layoutManager);
                         PointView.setAdapter(adapter);
                         adapter.notifyDataSetChanged();
@@ -117,7 +129,7 @@ public class SpecialistProfileActivity extends AppCompatActivity {
                     }
                 }
                 @Override
-                public void onFailure(Call<List<PointDTO>> call, Throwable t) {
+                public void onFailure(Call<List<Point>> call, Throwable t) {
                     Log.d("FAIL", t.getMessage());
                 }
             });
@@ -191,9 +203,57 @@ public class SpecialistProfileActivity extends AppCompatActivity {
         if ("false".equals(Enable)){
             PanelLayout.setVisibility(View.GONE);
             ExitBtn.setVisibility(View.GONE);
-        }else {
+            Type listType = new TypeToken<List<Work>>() {}.getType();
+            sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+            String workJson = sharedPreferences.getString("workList", "");
+            Gson gson = new Gson();
+            workList = gson.fromJson(workJson, listType);
+            boolean isSpecialistIdFound = false;
+            for (Work work : workList) {
+                String a = String.valueOf(work.specialistid);
+                String b = String.valueOf(specialist.id);
+                if (a.equals(b)) {
+                    isSpecialistIdFound = true;
+                    break;
+                }
+            }
+            // Скрываем кнопку, если id специалиста найден в списке
+            if (isSpecialistIdFound) {
+                AddWorkBtn.setVisibility(View.GONE);
+            } else {
+                AddWorkBtn.setVisibility(View.VISIBLE);
+            }
+        } else {
             ShowLayout.setVisibility(View.GONE);
         }
+    }
+
+    public void WorkOnClick(View view){
+        Gson gson = new Gson();
+        String clientJson = sharedPreferences.getString("tempUser", "");
+        Client tempClient = gson.fromJson(clientJson, Client.class);
+        Call<Void> call = api.addWork(tempClient.id, specialist.id);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                Toast.makeText(getApplicationContext(), "Заявка отправлена, скоро вы сможете связаться со специалистом!", Toast.LENGTH_LONG).show();
+                Work work = new Work();
+                work.id = workList.size();
+                work.specialistid = specialist.id;
+                work.clientid = tempClient.id;
+                workList.add(work);
+
+                String worksJson = gson.toJson(workList);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString("workList", worksJson);
+                editor.apply();
+
+                AddWorkBtn.setVisibility(View.GONE);
+            }
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {Log.e("FAIL", t.getMessage());}
+        });
+
     }
 
     public void PanelOnClick(View view) {
@@ -222,6 +282,12 @@ public class SpecialistProfileActivity extends AppCompatActivity {
                 intent4.putExtra("ActiveSpecialist", (Serializable) specialist);
                 intent4.putExtra("KEY", separatorr);
                 startActivity(intent4);
+                break;
+            case "work_btn":
+                Intent intent5 = new Intent(getApplicationContext(), WorksListActivity.class);
+                intent5.putExtra("ActiveSpecialist", (Serializable) specialist);
+                intent5.putExtra("KEY", separatorr);
+                startActivity(intent5);
                 break;
         }
     }

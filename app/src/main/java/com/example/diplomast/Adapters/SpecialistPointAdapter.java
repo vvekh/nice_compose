@@ -9,8 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.diplomast.DTO.PointDTO;
-import com.example.diplomast.DTO.Specialist;
+import com.example.diplomast.DTO.Point;
 import com.example.diplomast.R;
 import com.example.diplomast.Retrofit.APIclient;
 import com.example.diplomast.Retrofit.APIinterface;
@@ -27,12 +26,12 @@ public class SpecialistPointAdapter extends RecyclerView.Adapter<SpecialistPoint
     private static final int TYPE_SELECTED = 0;
     private static final int TYPE_NORMAL = 1;
 
-    private List<PointDTO> points;
-    private List<PointDTO> specialistPoints;
+    private List<Point> points;
+    private List<Point> specialistPoints;
     private int specialistId;
     private APIinterface api;
 
-    public SpecialistPointAdapter(List<PointDTO> points, List<PointDTO> specialistPoints, int specialistId){
+    public SpecialistPointAdapter(List<Point> points, List<Point> specialistPoints, int specialistId){
         this.points = points;
         this.specialistPoints = specialistPoints;
         this.specialistId = specialistId;
@@ -41,7 +40,7 @@ public class SpecialistPointAdapter extends RecyclerView.Adapter<SpecialistPoint
 
     @Override
     public int getItemViewType(int position) {
-        PointDTO point = points.get(position);
+        Point point = points.get(position);
         int pointId = point.id;
         if(containsPointById(specialistPoints, pointId)){
             return TYPE_SELECTED;
@@ -50,9 +49,9 @@ public class SpecialistPointAdapter extends RecyclerView.Adapter<SpecialistPoint
         }
     }
 
-    private boolean containsPointById(List<PointDTO> points, int id){
+    private boolean containsPointById(List<Point> points, int id){
         if(points != null){
-            for(PointDTO point : points){
+            for(Point point : points){
                 if(point.id == id){
                     return true;
                 }
@@ -76,7 +75,7 @@ public class SpecialistPointAdapter extends RecyclerView.Adapter<SpecialistPoint
 
     @Override
     public void onBindViewHolder(@NonNull PointViewHolder holder, int position) {
-        PointDTO point = points.get(position);
+        Point point = points.get(position);
         holder.PointName.setText(point.pointname);
 
         holder.itemView.setOnClickListener(v -> {

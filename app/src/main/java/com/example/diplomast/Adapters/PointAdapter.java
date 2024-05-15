@@ -8,15 +8,15 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.diplomast.DTO.PointDTO;
+import com.example.diplomast.DTO.Point;
 import com.example.diplomast.R;
 
 import java.util.List;
 
 public class PointAdapter extends RecyclerView.Adapter<PointAdapter.PointViewHolder> {
-    private List<PointDTO> points;
+    private List<Point> points;
 
-    public PointAdapter(List<PointDTO> points) {
+    public PointAdapter(List<Point> points) {
         this.points = points;
     }
 
@@ -29,7 +29,7 @@ public class PointAdapter extends RecyclerView.Adapter<PointAdapter.PointViewHol
 
     @Override
     public void onBindViewHolder(@NonNull PointViewHolder holder, int position) {
-        PointDTO point = points.get(position);
+        Point point = points.get(position);
         holder.pointNameTextView.setText(point.pointname);
     }
 

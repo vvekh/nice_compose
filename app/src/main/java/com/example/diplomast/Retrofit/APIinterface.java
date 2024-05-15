@@ -2,7 +2,7 @@ package com.example.diplomast.Retrofit;
 
 import com.example.diplomast.DTO.Client;
 import com.example.diplomast.DTO.Note;
-import com.example.diplomast.DTO.PointDTO;
+import com.example.diplomast.DTO.Point;
 import com.example.diplomast.DTO.Specialist;
 import com.example.diplomast.DTO.Timeline;
 import com.example.diplomast.DTO.Work;
@@ -39,7 +39,7 @@ public interface APIinterface {
     Call<Void> postNewClient(@Body Client newClient);
     @Headers("Accept: application/json")
     @GET("Specialist/{id}/Points")
-    Call<List<PointDTO>> getSpecialistPoints(@Path("id") int id);
+    Call<List<Point>> getSpecialistPoints(@Path("id") int id);
     @Headers("Accept: application/json")
     @PUT("Specialist/{id}/Update")
     Call<Void> updateSpecialist(@Path("id") int id, @Body Specialist updatedSpecialist);
@@ -48,7 +48,7 @@ public interface APIinterface {
     Call<Void> postNewSpecialist(@Body Specialist newSpecialist);
     @Headers("Accept: application/json")
     @GET("Points")
-    Call<List<PointDTO>> getAllPoints();
+    Call<List<Point>> getAllPoints();
     @Headers("Accept: application/json")
     @GET("Specialists/ByPoints")
     Call<List<Specialist>> getSpecialistsByCriteria(@Query("criteriaIds") List<Integer> criteriaIds);
@@ -97,6 +97,10 @@ public interface APIinterface {
     @Headers("Accept: application/json")
     @GET("Specialist/{id}/Work")
     Call<List<Work>> getWorksBySpecialistId(@Path("id") int specialistId);
-
+    @Headers("Accept: application/json")
+    @GET("Clients/All")
+    Call<List<Client>> getAllClients();
+    @PUT("Specialist/{id}/Update2")
+    Call<Void> update2Specialist(@Path("id") int id, @Body Specialist specialist);
 
 }
