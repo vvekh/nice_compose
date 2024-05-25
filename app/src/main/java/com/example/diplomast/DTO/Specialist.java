@@ -18,4 +18,7 @@ public class Specialist implements Serializable {
     public String status;
     public String email;
     public String phone;
+    public String pdf1;
+    public String pdf2;
+    public String pdf3;
 }

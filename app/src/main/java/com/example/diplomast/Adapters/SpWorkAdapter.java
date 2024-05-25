@@ -81,6 +81,7 @@ public class SpWorkAdapter extends RecyclerView.Adapter<SpWorkAdapter.SpWorkView
             } else if (currentWork.status.equals("2")){
                 holder.SpEmail.setVisibility(View.GONE);
                 holder.SpPhone.setVisibility(View.GONE);
+                holder.ClBtn.setVisibility(View.GONE);
                 holder.StatusText.setText("Специалист заврешил вашу работу.");
             } else if (currentWork.status.equals("3")){
                 holder.SpEmail.setVisibility(View.GONE);

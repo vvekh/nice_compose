@@ -2,8 +2,12 @@ package com.example.diplomast;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
+import java.io.File;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -15,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -36,6 +41,9 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -47,6 +55,8 @@ public class SpecialistEditActivity extends AppCompatActivity {
     EditText FioBox, LoginBox, PriceBox;
     DatePicker BirthdateBox; Spinner TimelineBox, SexBox;
     Button SavedocBtn, SavedocBtn2, SaveBtn;
+    private static final int REQUEST_CODE_DOCUMENT1 = 1;
+    private static final int REQUEST_CODE_DOCUMENT2 = 2;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -176,10 +186,81 @@ public class SpecialistEditActivity extends AppCompatActivity {
         }
     }
 
-    public void SavedocOnClick(View view) { //Сохранение документа об образовании
+    public void SavedocOnClick(View view) { // Сохранение документа об образовании
+        // Создаем Intent для выбора файла
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("application/pdf"); // Указываем тип файлов PDF
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+
+        // Запускаем Intent для выбора файла
+        startActivityForResult(Intent.createChooser(intent, "Select a PDF file"), 1);
     }
 
-    public void Savedoc2OnClick(View view) { //Сохранение документа о дополнительном образовании
+    public void Savedoc2OnClick(View view) { // Сохранение документа о дополнительном образовании
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == 1 && resultCode == RESULT_OK && data != null) {
+            // Получаем URI выбранного файла
+            Uri selectedFileUri = data.getData();
+            if (selectedFileUri != null) {
+                String filePath = getPathFromUri(selectedFileUri);
+                if (filePath != null) {
+                    File file = new File(filePath);
+
+                    // Создаем RequestBody для отправки файла
+                    RequestBody requestFile = RequestBody.create(MediaType.parse("application/pdf"), file);
+                    MultipartBody.Part body = MultipartBody.Part.createFormData("pdfFile", file.getName(), requestFile);
+
+                    // Вызываем метод API для загрузки PDF-файла
+                    uploadPdf1(body, specialist.id);
+                } else {
+                    // Обработка ошибки получения пути к файлу
+                }
+            } else {
+                // Обработка ошибки получения URI файла
+            }
+        }
+    }
+
+    private String getPathFromUri(Uri uri) {
+        String filePath = null;
+        String[] filePathColumn = { MediaStore.Images.Media.DATA };
+
+        Cursor cursor = getContentResolver().query(uri, filePathColumn, null, null, null);
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+                filePath = cursor.getString(columnIndex);
+            }
+            cursor.close();
+        }
+
+        return filePath;
+    }
+
+    private void uploadPdf1(MultipartBody.Part pdfFile, int specialistId) {
+        Call<String> call = api.uploadPdf1(pdfFile, specialistId);
+        call.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                if (response.isSuccessful()) {
+                    String pdfPath = response.body();
+                    // Обработка успешной загрузки
+                } else {
+                    // Обработка ошибки загрузки
+                }
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                // Обработка ошибки сети
+            }
+        });
     }
 
     public void SaveOnClick(View view) {

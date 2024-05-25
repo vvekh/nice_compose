@@ -9,6 +9,7 @@ import com.example.diplomast.DTO.Work;
 
 import java.util.List;
 
+import okhttp3.MultipartBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -16,8 +17,10 @@ import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.HTTP;
 import retrofit2.http.Headers;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
+import retrofit2.http.Part;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
@@ -100,7 +103,25 @@ public interface APIinterface {
     @Headers("Accept: application/json")
     @GET("Clients/All")
     Call<List<Client>> getAllClients();
+    @Headers("Accept: application/json")
     @PUT("Specialist/{id}/Update2")
     Call<Void> update2Specialist(@Path("id") int id, @Body Specialist specialist);
-
+    @Headers("Accept: application/json")
+    @Multipart
+    @POST("Upload/Pdf1")
+    Call<String> uploadPdf1(@Part MultipartBody.Part pdfFile, @Part("specialistId") int specialistId);
+    @Headers("Accept: application/json")
+    @Multipart
+    @POST("Upload/Pdf2")
+    Call<String> uploadPdf2(
+            @Part MultipartBody.Part pdfFile,
+            @Part("specialistId") int specialistId
+    );
+    @Headers("Accept: application/json")
+    @Multipart
+    @POST("Upload/Pdf3")
+    Call<String> uploadPdf3(
+            @Part MultipartBody.Part pdfFile,
+            @Part("specialistId") int specialistId
+    );
 }
