@@ -3,6 +3,7 @@ package com.example.diplomast;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -14,9 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.diplomast.Adapters.FavouritesAdapter;
-import com.example.diplomast.Adapters.SpecialistAdapter;
 import com.example.diplomast.DTO.Client;
-import com.example.diplomast.DTO.Note;
 import com.example.diplomast.DTO.Specialist;
 import com.example.diplomast.Retrofit.APIclient;
 import com.example.diplomast.Retrofit.APIinterface;
@@ -31,7 +30,7 @@ import retrofit2.Response;
 public class FavouritesActivity extends AppCompatActivity {
     APIinterface api; Client client;
     List<Specialist> favouriteSpecialists = new ArrayList<>();
-    RecyclerView SpecView;
+    RecyclerView SpecView; TextView ErrorView;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -46,6 +45,7 @@ public class FavouritesActivity extends AppCompatActivity {
         });
         client = (Client) getIntent().getSerializableExtra("ActiveClient");
         SpecView = findViewById(R.id.spec_view);
+        ErrorView = findViewById(R.id.error_view);
         SpecView.setLayoutManager(new LinearLayoutManager(this)); // Установка одного LayoutManager
 
         api = APIclient.start().create(APIinterface.class);
@@ -53,9 +53,16 @@ public class FavouritesActivity extends AppCompatActivity {
         call.enqueue(new Callback<List<Specialist>>() {
             @Override
             public void onResponse(Call<List<Specialist>> call, Response<List<Specialist>> response) {
-                favouriteSpecialists = response.body();
-                FavouritesAdapter adapter = new FavouritesAdapter(favouriteSpecialists);
-                SpecView.setAdapter(adapter);
+                if (response.isSuccessful()){
+                    ErrorView.setVisibility(View.GONE);
+                    SpecView.setVisibility(View.VISIBLE);
+                    favouriteSpecialists = response.body();
+                    FavouritesAdapter adapter = new FavouritesAdapter(favouriteSpecialists);
+                    SpecView.setAdapter(adapter);
+                }else {
+                    ErrorView.setVisibility(View.VISIBLE);
+                    SpecView.setVisibility(View.GONE);
+                }
             }
             @Override
             public void onFailure(Call<List<Specialist>> call, Throwable t) {Log.d("FAIL", t.getMessage());}

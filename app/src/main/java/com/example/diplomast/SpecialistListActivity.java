@@ -2,12 +2,12 @@ package com.example.diplomast;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,7 +16,6 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.example.diplomast.Adapters.SpecialistAdapter;
 import com.example.diplomast.DTO.Client;
@@ -35,8 +34,9 @@ public class SpecialistListActivity extends AppCompatActivity {
     APIinterface api; List<Integer> selectedIds; List<Specialist> favouriteSpecialists;
     Client client;
     ImageView LikedBtn;
-    RecyclerView SpecView;
+    RecyclerView SpecView; TextView ErrorView;
 
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,6 +52,7 @@ public class SpecialistListActivity extends AppCompatActivity {
         favouriteSpecialists = (List<Specialist>) getIntent().getSerializableExtra("favouriteSpecialists");
         LikedBtn = findViewById(R.id.liked_btn);
         SpecView = findViewById(R.id.spec_view);
+        ErrorView = findViewById(R.id.error_view);
 
         SpecView.setLayoutManager(new LinearLayoutManager(this)); // Установка одного LayoutManager
         api = APIclient.start().create(APIinterface.class);
@@ -66,19 +67,25 @@ public class SpecialistListActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(Call<List<Specialist>> call, Response<List<Specialist>> response) {
                     if (response.isSuccessful()) {
+                        ErrorView.setVisibility(View.GONE);
+                        SpecView.setVisibility(View.VISIBLE);
                         List<Specialist> specialists = response.body();
                         // Создание и установка адаптера для RecyclerView
-                        SpecialistAdapter adapter = new SpecialistAdapter(specialists, favouriteSpecialists, client);
-                        SpecView.setAdapter(adapter);
+                        if (specialists.size() > 0){
+                            SpecialistAdapter adapter = new SpecialistAdapter(specialists, favouriteSpecialists, client);
+                            SpecView.setAdapter(adapter);
+                        }
+                        else {
+                            Toast.makeText(getApplicationContext(), "cfvgbhjn", Toast.LENGTH_LONG);
+                        }
                     } else {
+                        ErrorView.setVisibility(View.VISIBLE);
+                        SpecView.setVisibility(View.GONE);
                         Log.e("API Error", "Failed to retrieve favorite specialists. Error: " + response.message());
                     }
                 }
-
                 @Override
-                public void onFailure(Call<List<Specialist>> call, Throwable t) {
-                    Log.e("API Error", "Failed to retrieve favorite specialists. Error: " + t.getMessage());
-                }
+                public void onFailure(Call<List<Specialist>> call, Throwable t) {Log.e("API Error", "Failed to retrieve favorite specialists. Error: " + t.getMessage());}
             });
         } else {
             // Загрузка всех специалистов
@@ -95,11 +102,8 @@ public class SpecialistListActivity extends AppCompatActivity {
                         Log.e("API Error", "Failed to retrieve favorite specialists. Error: " + response.message());
                     }
                 }
-
                 @Override
-                public void onFailure(Call<List<Specialist>> call, Throwable t) {
-                    Log.e("API Error", "Failed to retrieve favorite specialists. Error: " + t.getMessage());
-                }
+                public void onFailure(Call<List<Specialist>> call, Throwable t) {Log.e("API Error", "Failed to retrieve favorite specialists. Error: " + t.getMessage());}
             });
         }
     }

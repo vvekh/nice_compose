@@ -1,34 +1,25 @@
 package com.example.diplomast.Adapters;
 
-import static androidx.core.content.ContextCompat.startActivity;
-
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.ColorMatrix;
-import android.graphics.ColorMatrixColorFilter;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.diplomast.DTO.Client;
-import com.example.diplomast.R;
-
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.diplomast.DTO.Client;
 import com.example.diplomast.DTO.Specialist;
+import com.example.diplomast.R;
 import com.example.diplomast.Retrofit.APIclient;
 import com.example.diplomast.Retrofit.APIinterface;
-import com.example.diplomast.SpecialistEditActivity;
 import com.example.diplomast.SpecialistProfileActivity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.ResponseBody;
@@ -105,6 +96,9 @@ public class SpecialistAdapter extends RecyclerView.Adapter<SpecialistAdapter.Sp
         holder.itemView.setOnLongClickListener(v -> {
             if (!containsSpecialistById(favoriteSpecialists, specialist.id)) {
                 addFavoriteSpecialist(client.id, specialist.id);
+                if (favoriteSpecialists == null){
+                    favoriteSpecialists = new ArrayList<>();
+                }
                 favoriteSpecialists.add(specialist);
                 notifyDataSetChanged();
             } else {

@@ -255,4 +255,21 @@ public class StartActivity extends AppCompatActivity {
         BottomBtn.setText("Зарегистрироваться");
         i = false;
     }
+
+    private void closeActivity() {
+        SharedPreferences prefs = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.clear();
+        editor.apply();
+
+        Intent intent = new Intent(StartActivity.this, MainActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        closeActivity();
+    }
 }

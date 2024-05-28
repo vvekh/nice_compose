@@ -2,12 +2,9 @@ package com.example.diplomast;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.util.Log;
-import java.io.File;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -41,9 +38,6 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
-import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -55,8 +49,10 @@ public class SpecialistEditActivity extends AppCompatActivity {
     EditText FioBox, LoginBox, PriceBox;
     DatePicker BirthdateBox; Spinner TimelineBox, SexBox;
     Button SavedocBtn, SavedocBtn2, SaveBtn;
-    private static final int REQUEST_CODE_DOCUMENT1 = 1;
-    private static final int REQUEST_CODE_DOCUMENT2 = 2;
+
+    private static final int REQUEST_CODE_PDF = 1;
+    String pdf1, pdf2, pdf3;
+    int level = 0, type;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -179,90 +175,93 @@ public class SpecialistEditActivity extends AppCompatActivity {
 
         loadFields(specialist);
     }
-
     private void loadFields(Specialist spec){
         if ("1".equals(spec.status)){
             DocLayout.setVisibility(View.GONE);
         }
     }
-
     public void SavedocOnClick(View view) { // Сохранение документа об образовании
-        // Создаем Intent для выбора файла
+        type = 1;
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType("application/pdf"); // Указываем тип файлов PDF
-        intent.addCategory(Intent.CATEGORY_OPENABLE);
-
-        // Запускаем Intent для выбора файла
-        startActivityForResult(Intent.createChooser(intent, "Select a PDF file"), 1);
+        intent.setType("application/pdf");
+        startActivityForResult(intent, REQUEST_CODE_PDF);
     }
-
     public void Savedoc2OnClick(View view) { // Сохранение документа о дополнительном образовании
-
+        type = 2;
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("application/pdf");
+        startActivityForResult(intent, REQUEST_CODE_PDF);
     }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == 1 && resultCode == RESULT_OK && data != null) {
-            // Получаем URI выбранного файла
-            Uri selectedFileUri = data.getData();
-            if (selectedFileUri != null) {
-                String filePath = getPathFromUri(selectedFileUri);
-                if (filePath != null) {
-                    File file = new File(filePath);
-
-                    // Создаем RequestBody для отправки файла
-                    RequestBody requestFile = RequestBody.create(MediaType.parse("application/pdf"), file);
-                    MultipartBody.Part body = MultipartBody.Part.createFormData("pdfFile", file.getName(), requestFile);
-
-                    // Вызываем метод API для загрузки PDF-файла
-                    uploadPdf1(body, specialist.id);
-                } else {
-                    // Обработка ошибки получения пути к файлу
+        if (resultCode == RESULT_OK && data != null) {
+            if (requestCode == REQUEST_CODE_PDF) {
+                Uri uri = data.getData();
+                if (type == 1){
+                    if (uri != null){
+                        level ++;
+                        Toast.makeText(getApplicationContext(), "Документ загружен!", Toast.LENGTH_SHORT).show();
+                        if (level == 1){
+                            SavedocBtn.setText("Добавить документ");
+                            pdf1 = "Документ есть";
+                        } else if (level == 2) {
+                            SavedocBtn.setText("Документы добавлены");
+                            SavedocBtn.setEnabled(false);
+                            pdf2 = "Документ есть";
+                        } else {
+                            SavedocBtn2.setText("Прикрепить документ");
+                        }
+                    }
+                } else if (type == 2) {
+                    if (uri != null){
+                       SavedocBtn2.setText("Документ добавлен");
+                       SavedocBtn2.setEnabled(false);
+                       pdf3 = "Документ есть";
+                    }
                 }
-            } else {
-                // Обработка ошибки получения URI файла
+                /*
+                try {
+                    InputStream inputStream = getContentResolver().openInputStream(uri);
+                    try {
+                        File cacheDir = getCacheDir();
+                        File tempFile = File.createTempFile("prefix", ".pdf", cacheDir);
+                        FileOutputStream outputStream = new FileOutputStream(tempFile);
+                        byte[] buffer = new byte[1024];
+                        int read;
+                        while ((read = inputStream.read(buffer)) != -1){
+                            outputStream.write(buffer, 0, read);
+                        }
+                        outputStream.flush();
+                        RequestBody requestBody = RequestBody.create(MediaType.parse("application/pdf"), tempFile);
+                        MultipartBody.Part pdfFile = MultipartBody.Part.createFormData("pdfFile", tempFile.getName(), requestBody);
+                        Log.d("RESULT", "СОДЕРЖИМОЕ: " + pdfFile.body());
+
+                        Call<String> call = api.uploadPdf1(pdfFile, specialist.id);
+                        call.enqueue(new Callback<String>() {
+                            @Override
+                            public void onResponse(Call<String> call, Response<String> response) {
+                                Log.d("RESULT", String.valueOf(response.body()));
+                            }
+                            @Override
+                            public void onFailure(Call<String> call, Throwable t) {
+                                Log.d("ERROR", t.getMessage());
+                            }
+                        });
+
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                } catch (FileNotFoundException e) {
+                    throw new RuntimeException(e);
+                }
+
+                Теперь вы можете использовать pdfFileUri для загрузки файла на сервер
+              uploadPdfToServer(pdfFileUri);
+                 */
             }
         }
     }
-
-    private String getPathFromUri(Uri uri) {
-        String filePath = null;
-        String[] filePathColumn = { MediaStore.Images.Media.DATA };
-
-        Cursor cursor = getContentResolver().query(uri, filePathColumn, null, null, null);
-        if (cursor != null) {
-            if (cursor.moveToFirst()) {
-                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-                filePath = cursor.getString(columnIndex);
-            }
-            cursor.close();
-        }
-
-        return filePath;
-    }
-
-    private void uploadPdf1(MultipartBody.Part pdfFile, int specialistId) {
-        Call<String> call = api.uploadPdf1(pdfFile, specialistId);
-        call.enqueue(new Callback<String>() {
-            @Override
-            public void onResponse(Call<String> call, Response<String> response) {
-                if (response.isSuccessful()) {
-                    String pdfPath = response.body();
-                    // Обработка успешной загрузки
-                } else {
-                    // Обработка ошибки загрузки
-                }
-            }
-
-            @Override
-            public void onFailure(Call<String> call, Throwable t) {
-                // Обработка ошибки сети
-            }
-        });
-    }
-
     public void SaveOnClick(View view) {
         if (LoginBox.length() < 4){
             Toast.makeText(getApplicationContext(), "Слишком короткий логин!", Toast.LENGTH_SHORT).show();
@@ -289,7 +288,6 @@ public class SpecialistEditActivity extends AppCompatActivity {
             Saving();
         }
     } //Кнопка сохранения пользователя в соответствии с условиями
-
     private void Saving(){
         if (specialist.status.equals("1")){ //существующий аккаунт
             String fio = String.valueOf(FioBox.getText());
@@ -330,6 +328,9 @@ public class SpecialistEditActivity extends AppCompatActivity {
             specialist.login = LoginBox.getText().toString();
             specialist.timelineid = TimelineBox.getSelectedItemPosition();
             specialist.price = String.valueOf(PriceBox.getText());
+            specialist.pdf1 = pdf1;
+            specialist.pdf2 = pdf2;
+            specialist.pdf3 = pdf3;
 
             Call<Void> call = api.update2Specialist(specialist.id, specialist);
             call.enqueue(new Callback<Void>() {
@@ -377,6 +378,10 @@ public class SpecialistEditActivity extends AppCompatActivity {
             specialist.price = String.valueOf(PriceBox.getText());
             specialist.graduatuon2 = "0";
             specialist.status = "3";
+            specialist.pdf1 = pdf1;
+            specialist.pdf2 = pdf2;
+            specialist.pdf3 = pdf3;
+
 
             Call<Void> call = api.postNewSpecialist(specialist);
             call.enqueue(new Callback<Void>() {
@@ -398,7 +403,6 @@ public class SpecialistEditActivity extends AppCompatActivity {
             });
         }
     } //Функция сохранения пользователя
-
     public static boolean isValidEmail(String email) {
         String pattern = "^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$";
         Pattern r = Pattern.compile(pattern);
@@ -409,5 +413,4 @@ public class SpecialistEditActivity extends AppCompatActivity {
         String pattern = "^8\\d{10}$";
         return phoneNumber.matches(pattern);
     }
-
 }

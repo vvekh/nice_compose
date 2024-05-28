@@ -105,11 +105,17 @@ public interface APIinterface {
     Call<List<Client>> getAllClients();
     @Headers("Accept: application/json")
     @PUT("Specialist/{id}/Update2")
+
+
+
     Call<Void> update2Specialist(@Path("id") int id, @Body Specialist specialist);
     @Headers("Accept: application/json")
     @Multipart
     @POST("Upload/Pdf1")
-    Call<String> uploadPdf1(@Part MultipartBody.Part pdfFile, @Part("specialistId") int specialistId);
+    Call<String> uploadPdf1(
+            @Part MultipartBody.Part pdfFile,
+            @Part("specialistId") int specialistId
+    );
     @Headers("Accept: application/json")
     @Multipart
     @POST("Upload/Pdf2")
