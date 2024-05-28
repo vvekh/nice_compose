@@ -18,7 +18,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
@@ -37,6 +36,7 @@ import java.io.Serializable;
 import java.lang.reflect.Type;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -198,7 +198,6 @@ public class SpecialistProfileActivity extends AppCompatActivity {
         }).start();
         Load();
     }
-
     private void Load(){
         if ("false".equals(Enable)){
             PanelLayout.setVisibility(View.GONE);
@@ -227,7 +226,6 @@ public class SpecialistProfileActivity extends AppCompatActivity {
             ShowLayout.setVisibility(View.GONE);
         }
     }
-
     public void WorkOnClick(View view){
         Gson gson = new Gson();
         String clientJson = sharedPreferences.getString("tempUser", "");
@@ -238,24 +236,31 @@ public class SpecialistProfileActivity extends AppCompatActivity {
             public void onResponse(Call<Void> call, Response<Void> response) {
                 Toast.makeText(getApplicationContext(), "Заявка отправлена, скоро вы сможете связаться со специалистом!", Toast.LENGTH_LONG).show();
                 Work work = new Work();
-                work.id = workList.size();
                 work.specialistid = specialist.id;
                 work.clientid = tempClient.id;
-                workList.add(work);
+                work.status = "0";
+                if (workList == null || workList.size() < 1){
+                    workList = new ArrayList<>();
+                    work.id = workList.size();
+                    workList.add(work);
+                }else {
+                    workList.add(work);
+                }
 
+                Gson gson = new Gson();
                 String worksJson = gson.toJson(workList);
+                SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putString("workList", worksJson);
                 editor.apply();
+                Log.d("Okay", response.message());
 
                 AddWorkBtn.setVisibility(View.GONE);
             }
             @Override
             public void onFailure(Call<Void> call, Throwable t) {Log.e("FAIL", t.getMessage());}
         });
-
     }
-
     public void PanelOnClick(View view) {
         String ButtonName = getResources().getResourceEntryName(view.getId());
         switch (ButtonName){
@@ -291,7 +296,6 @@ public class SpecialistProfileActivity extends AppCompatActivity {
                 break;
         }
     }
-
     public void ExitOnClick(View view) {
         SharedPreferences prefs = getSharedPreferences("MyPrefs", MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();

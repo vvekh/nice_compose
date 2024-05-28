@@ -3,7 +3,6 @@ package com.example.diplomast;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.RecoverySystem;
 import android.util.Log;
 
 import androidx.activity.EdgeToEdge;
@@ -16,7 +15,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.diplomast.Adapters.ClWorkAdapter;
 import com.example.diplomast.Adapters.SpWorkAdapter;
-import com.example.diplomast.Adapters.SpecialistAdapter;
 import com.example.diplomast.DTO.Client;
 import com.example.diplomast.DTO.Specialist;
 import com.example.diplomast.DTO.Work;

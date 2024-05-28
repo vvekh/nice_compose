@@ -105,10 +105,11 @@ public class StartActivity extends AppCompatActivity {
             Client newclient = new Client();
             newclient.login = login;
             newclient.password = password;
-            Intent intent = new Intent(getApplicationContext(), ClientEditActivity.class);
-            intent.putExtra("ActiveClient", (Serializable) newclient);
-            intent.putExtra("KEY", separatorr);
-            startActivity(intent);
+            Intent intent0 = new Intent(getApplicationContext(), ClientEditActivity.class);
+            intent0.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent0.putExtra("ActiveClient", (Serializable) newclient);
+            intent0.putExtra("KEY", separatorr);
+            startActivity(intent0);
 
             Gson gson = new Gson();
             String clientJson = gson.toJson(newclient);
@@ -133,6 +134,7 @@ public class StartActivity extends AppCompatActivity {
 
             // Save to SharedPreferences
             SharedPreferences sharedPreferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putString("tempUser", specialistJson);
             editor.apply();
@@ -150,6 +152,7 @@ public class StartActivity extends AppCompatActivity {
                     if (response.isSuccessful()){
                         Client tempclient = response.body();
                         Intent intent = new Intent(getApplicationContext(), ClientProfileActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                         intent.putExtra("ActiveClient", (Serializable) tempclient);
                         intent.putExtra("KEY", separatorr);
                         startActivity(intent);
@@ -210,30 +213,31 @@ public class StartActivity extends AppCompatActivity {
         if ("0".equals(specialist.status)){
             //ЗАЯВКА_ОТКЛОНЕНА
             blank_id = "0";
-            Intent intent = new Intent(getApplicationContext(), BlankActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.putExtra("blank_id", blank_id);
-            intent.putExtra("ActiveSpecialist", (Serializable) specialist);
-            startActivity(intent);
+            Intent intent1 = new Intent(getApplicationContext(), BlankActivity.class);
+            intent1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent1.putExtra("blank_id", blank_id);
+            intent1.putExtra("ActiveSpecialist", (Serializable) specialist);
+            startActivity(intent1);
         } else if ("3".equals(specialist.status)) {
             //ЗАЯВКА_НА_РАССМОТРЕНИИ
             blank_id = "3";
-            Intent intent = new Intent(getApplicationContext(), BlankActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.putExtra("blank_id", blank_id);
-            startActivity(intent);
+            Intent intent2 = new Intent(getApplicationContext(), BlankActivity.class);
+            intent2.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent2.putExtra("blank_id", blank_id);
+            startActivity(intent2);
         } else if ("4".equals(specialist.status)) {
             //ПРОФИЛЬ_ЗАБЛОКИРОВАН
             blank_id = "4";
-            Intent intent = new Intent(getApplicationContext(), BlankActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.putExtra("blank_id", blank_id);
-            startActivity(intent);
+            Intent intent3 = new Intent(getApplicationContext(), BlankActivity.class);
+            intent3.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent3.putExtra("blank_id", blank_id);
+            startActivity(intent3);
         }else {
-            Intent intent = new Intent(getApplicationContext(), SpecialistProfileActivity.class);
-            intent.putExtra("ActiveSpecialist", (Serializable) specialist);
-            intent.putExtra("KEY", separatorr);
-            startActivity(intent);
+            Intent intent4 = new Intent(getApplicationContext(), SpecialistProfileActivity.class);
+            intent4.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent4.putExtra("ActiveSpecialist", (Serializable) specialist);
+            intent4.putExtra("KEY", separatorr);
+            startActivity(intent4);
         }
     }
 
@@ -262,7 +266,7 @@ public class StartActivity extends AppCompatActivity {
         editor.clear();
         editor.apply();
 
-        Intent intent = new Intent(StartActivity.this, MainActivity.class);
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
         startActivity(intent);
         finish();
     }

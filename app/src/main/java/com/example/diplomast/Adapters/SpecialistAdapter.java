@@ -94,11 +94,13 @@ public class SpecialistAdapter extends RecyclerView.Adapter<SpecialistAdapter.Sp
         });
 
         holder.itemView.setOnLongClickListener(v -> {
-            if (!containsSpecialistById(favoriteSpecialists, specialist.id)) {
+            if (favoriteSpecialists == null || favoriteSpecialists.size() < 1){
+                favoriteSpecialists = new ArrayList<>();
                 addFavoriteSpecialist(client.id, specialist.id);
-                if (favoriteSpecialists == null){
-                    favoriteSpecialists = new ArrayList<>();
-                }
+                favoriteSpecialists.add(specialist);
+                notifyDataSetChanged();
+            }else if(!containsSpecialistById(favoriteSpecialists, specialist.id)) {
+                addFavoriteSpecialist(client.id, specialist.id);
                 favoriteSpecialists.add(specialist);
                 notifyDataSetChanged();
             } else {

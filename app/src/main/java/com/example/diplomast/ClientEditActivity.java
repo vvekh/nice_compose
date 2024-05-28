@@ -177,6 +177,7 @@ public class ClientEditActivity extends AppCompatActivity {
                     if (response.isSuccessful()) {
                         Log.d("SUCCESS", "Data updated successfully");
                         Intent intent = new Intent(getApplicationContext(), ClientProfileActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                         intent.putExtra("ActiveClient", (Serializable) client);
                         startActivity(intent);
                     } else {
@@ -212,6 +213,7 @@ public class ClientEditActivity extends AppCompatActivity {
                 public void onResponse(Call<Void> call, Response<Void> response) {
                     Log.d("SUCCESS", response.message());
                     Intent intent = new Intent(getApplicationContext(), ClientProfileActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                     intent.putExtra("ActiveClient", (Serializable) client);
                     startActivity(intent);
                 }

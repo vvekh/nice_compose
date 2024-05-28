@@ -2,6 +2,7 @@ package com.example.diplomast;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -47,14 +48,16 @@ public class NotesListActivity extends AppCompatActivity implements NoteAdapter.
             return insets;
         });
         specialist = (Specialist) getIntent().getSerializableExtra("ActiveSpecialist");
-        separatorr = getIntent().getStringExtra("KEY");
+        SharedPreferences prefs = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+
+        separatorr = prefs.getString("KEY", "");
         api = APIclient.start().create(APIinterface.class);
         NoteView = findViewById(R.id.note_view);
         NoteView.setLayoutManager(new LinearLayoutManager(this));
         NewNoteBtn = findViewById(R.id.new_note_btn);
 
         if ("Клиент".equals(separatorr)) {
-            NewNoteBtn.setVisibility(View.INVISIBLE);
+            NewNoteBtn.setVisibility(View.GONE);
         } else if ("Специалист".equals(separatorr)) {
             NewNoteBtn.setVisibility(View.VISIBLE);
         }
